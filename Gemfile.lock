@@ -165,7 +165,7 @@ GEM
       rake (~> 13.0)
     log4r (1.1.10)
     logger (1.7.0)
-    loofah (2.24.0)
+    loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -221,7 +221,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    psych (5.2.4)
+    psych (5.2.6)
       date
       stringio
     public_suffix (6.0.2)
@@ -323,7 +323,7 @@ GEM
       logger (>= 1.6.2)
       rack (>= 3.1.0)
       redis-client (>= 0.23.2)
-    solid_cable (3.0.7)
+    solid_cable (3.0.8)
       actioncable (>= 7.2)
       activejob (>= 7.2)
       activerecord (>= 7.2)
