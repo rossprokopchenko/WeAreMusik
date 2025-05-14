@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  track_id: MyString
+  artists: MyString
+  album_name: MyString
+  track_name: MyString
+  popularity: 1
+  duration: 1
+  explicit: false
+  danceability: 1.5
+  energy: 1.5
+  key: 1
+  loudness: 1.5
+  mode: 1
+  speechiness: 1.5
+  acousticness: 1.5
+  intrumentalness: MyString
+  liveness: 1.5
+  valence: 1.5
+  tempo: 1.5
+  time_signature: 1
+  track_genre: MyString
+
+two:
+  track_id: MyString
+  artists: MyString
+  album_name: MyString
+  track_name: MyString
+  popularity: 1
+  duration: 1
+  explicit: false
+  danceability: 1.5
+  energy: 1.5
+  key: 1
+  loudness: 1.5
+  mode: 1
+  speechiness: 1.5
+  acousticness: 1.5
+  intrumentalness: MyString
+  liveness: 1.5
+  valence: 1.5
+  tempo: 1.5
+  time_signature: 1
+  track_genre: MyString

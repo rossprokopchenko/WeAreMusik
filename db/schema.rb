@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_07_164510) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_12_193101) do
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -20,11 +20,41 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_164510) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "tracks", force: :cascade do |t|
+    t.string "track_id"
+    t.string "artists"
+    t.string "album_name"
+    t.string "track_name"
+    t.integer "popularity"
+    t.integer "duration_ms"
+    t.boolean "explicit"
+    t.float "danceability"
+    t.float "energy"
+    t.integer "key"
+    t.float "loudness"
+    t.integer "mode"
+    t.float "speechiness"
+    t.float "acousticness"
+    t.string "instrumentalness"
+    t.float "liveness"
+    t.float "valence"
+    t.float "tempo"
+    t.integer "time_signature"
+    t.string "track_genre"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_name"], name: "index_tracks_on_album_name"
+    t.index ["artists"], name: "index_tracks_on_artists"
+    t.index ["track_id"], name: "index_tracks_on_track_id", unique: true
+    t.index ["track_name"], name: "index_tracks_on_track_name"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 

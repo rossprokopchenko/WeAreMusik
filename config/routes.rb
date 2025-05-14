@@ -1,3 +1,5 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
@@ -16,6 +18,13 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  get "/tracks", to: "tracks#index"
+  get "/tracks/:id", to: "tracks#show"
+
+  get "/profile", to: "profile#index"
+
   # resources :profiles
 
+  mount Sidekiq::Web => "/sidekiq"
+  
 end

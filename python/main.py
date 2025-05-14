@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 
 import csvReader
-from csvReader import readArchiveOneData
+from csvReader import readTrackDataset
 
-pathToDataset = 'datasets/archive1/dataset.csv'
-tracksetOne = csvReader.readArchiveOneData(pathToDataset)
+pathToDataset = 'datasets/spotify_millsongdata.csv/tracks_features.csv'
+tracksetOne = csvReader.readTrackDataset(pathToDataset)
 
 app = FastAPI()
 

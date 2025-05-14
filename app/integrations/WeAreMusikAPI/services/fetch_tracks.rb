@@ -18,7 +18,7 @@ module WeAreMusikAPI
           return { success: false, errors: ["Could not get tracks from API"] }
         end
 
-        tracks = map_tracks(tracks_result[:data])
+        tracks = map_tracks(tracks_result)
 
         return { success: true, data: tracks }
 
@@ -36,15 +36,15 @@ module WeAreMusikAPI
         end
 
         def map_tracks(raw_result)
-          raw_tracks = raw_result || []
+          raw_tracks = raw_result[:data] || []
 
           tracks = raw_tracks.map do |raw_track|
             {
               # put the JSON parameters of each track returned from API here
-              track_id: raw_track.dig(:track_id),
+              track_id: raw_track.dig(:id),
               artists: raw_track.dig(:artists),
-              album_name: raw_track.dig(:album_name),
-              track_name: raw_track.dig(:track_name),
+              album_name: raw_track.dig(:album),
+              track_name: raw_track.dig(:name),
               popularity: raw_track.dig(:popularity),
               duration_ms: raw_track.dig(:duration_ms),
               explicit: raw_track.dig(:explicit),
