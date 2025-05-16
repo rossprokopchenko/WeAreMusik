@@ -1,5 +1,5 @@
 class TracksController < ApplicationController
-  include TracksHelper
+  # include TracksHelper
 
   def index
     @total_tracks = Track.count

@@ -18,12 +18,17 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  post 'add_input_track', to: 'home#add_input_track'
+  post 'clear_input_tracks', to: 'home#clear_input_tracks'
+
   get "/tracks", to: "tracks#index"
   get "/tracks/:id", to: "tracks#show"
 
-  get "/profile", to: "profile#index"
+  # get "/profile", to: "profile#index"
 
-  # resources :profiles
+  resources :user
+
+  # post "profile/update"
 
   mount Sidekiq::Web => "/sidekiq"
   

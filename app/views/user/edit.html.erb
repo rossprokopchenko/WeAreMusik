@@ -1,0 +1,40 @@
+<div class="w-half">
+    <div class="text-2xl font-bold">
+        Editing profile
+    </div>
+
+    <%= form_with model: @user do |form|%>
+    
+        <%# The attributes to edit %>
+
+        <div class="mt-4">
+            <div class="mt-2">
+                <%= form.label :username, style: "display: block" %>
+                <%= form.text_field :username, accept: "image/*", class: "placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
+            </div>
+
+            <div class="mt-2">
+                <%= form.label :profile_picture, style: "display: block" %>
+                <%= form.file_field :profile_picture, accept: "image/*", class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
+            </div>
+
+            <div class="mt-2">
+                <%= form.label :biography, style: "display: block" %>
+                <%= form.rich_text_area :biography, class: "placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
+            </div>
+        </div>
+
+        <%# Bottom action buttons %>
+        <div class="flex flex-row w-full mt-4">
+            <button onclick="location.href='<%= user_path(@user) %>'" class="flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                </svg>
+
+                <span class="mx-2">Back</span>
+            </button>
+
+            <%= form.submit "Update", class: "ml-auto flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" %>
+        </div>
+    <% end %>
+</div>

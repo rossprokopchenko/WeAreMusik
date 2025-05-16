@@ -33,11 +33,12 @@ module WeAreMusik
     #     fetchTracksObj = WeAreMusikAPI::Services::FetchTracks.new()
 
     #     trackResponse = fetchTracksObj.perform
+    #     new_tracks = []
 
     #     # puts trackResponse[:data].first
 
     #     trackResponse[:data].each_with_index do |track, index|
-    #       newTrack = Track.new(
+    #       new_track = Track.new(
     #         track_id: track[:track_id],
     #         artists: track[:artists],
     #         album_name: track[:album_name],
@@ -60,17 +61,17 @@ module WeAreMusik
     #         track_genre: track[:track_genre],
     #       )
           
-    #       result = newTrack.save
+    #       new_tracks << new_track
 
-    #       puts "Index: #{index}: Adding track #{track[:track_id]}, result: #{result}"
+    #       puts "Index: #{index}: Adding track #{track[:track_id]}"
+
     #     end
+
+    #     result = Track.import(new_tracks, validate: true)
+
+    #     puts "Import operation result: #{result}"
+
     #   end
-    # end
-
-    # config.after_initialize do
-      
-
-
     # end
 
   end
