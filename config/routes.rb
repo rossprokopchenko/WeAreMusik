@@ -16,10 +16,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  root "home#index"
+  # root "home#index"
+
+  match '/', to: 'home#index', via: [:get, :post], as: :root
 
   post 'add_input_track', to: 'home#add_input_track'
-  post 'clear_input_tracks', to: 'home#clear_input_tracks'
+  post 'clear_input_tracks', to: 'home#clear_input_tracks', as: :clear_input_tracks
 
   get "/tracks", to: "tracks#index"
   get "/tracks/:id", to: "tracks#show"

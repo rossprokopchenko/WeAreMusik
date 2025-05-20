@@ -1,0 +1,11 @@
+<%= turbo_stream.update "input_tracks" do %>
+  <%= render partial: "home/input_tracks", locals: { tracks: @input_tracks } %>
+<% end %>
+
+<%= turbo_stream.update "recommended_tracks" do %>
+  <%= render partial: "home/recommended_tracks", locals: { tracks: @recommended_tracks } %>
+<% end %>
+
+<%= turbo_stream.update "search_result_tracks" do %>
+  <%= render partial: "home/search_result_tracks", locals: { tracks: @search_result_tracks } %>
+<% end %>

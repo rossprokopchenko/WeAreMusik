@@ -1,0 +1,13 @@
+
+    <%# <div id="flash" class="ml-auto bg-green-500 text-white px-4 py-2 rounded shadow-md transition-opacity duration-500 z-50"> %>
+<% if flash.any? %>
+  <% flash.each do |key, message| %>
+    <div class="ml-auto bg-green-500 text-white px-4 py-2 rounded shadow-md transition-opacity duration-500 z-50" data-controller="flash">
+        <% if message.present? %>
+        <div class="flash <%= key %>">
+            <%= message %>
+        </div>
+        <% end %>
+    </div>
+  <% end %>
+<% end %>

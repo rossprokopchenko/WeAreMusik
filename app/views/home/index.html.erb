@@ -1,71 +1,51 @@
 <main class="flex h-full w-full overflow-x-hidden overflow-y-hidden justify-between">
 
 	<!-- LEFT PANE -->
-	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6 space-y-4">
+	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6">
 
-		<!-- Clear Button -->
+		<!-- Action Div -->
 		<div class="relative w-full flex items-center">
-			<%= button_to 'Clear Added Tracks', clear_input_tracks_path, method: :post,
-			class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
+			<%# Clear button %>
+			<%= button_to 'Clear Tracks', clear_input_tracks_path, 
+				method: :post,
+				class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
 		
-			<% if flash[:notice] %>
-				<div id="flash-notice" class="ml-auto bg-green-500 text-white px-4 py-2 rounded shadow-md transition-opacity duration-500 z-50"
-					data-controller="flash">
-					<%= flash[:notice] %>
-				</div>
-			<% end %>
+			<%# Flash message %>
+			<div id="flash" class="ml-auto">
+				<%= turbo_stream_from "flash" %>
+					<%= render "flash" %>
+				<%= yield %>
+			</div>
+			
 		</div>
 
 		<!-- Input Tracks -->
-		<div class="space-y-4">
-			<% @input_tracks.each do |input_track| %>
-				<div class="justify-between flex flex-col px-4 py-3 bg-white rounded-lg shadow-md dark:bg-gray-800 min-h-[100px]">
-					<p class="text-l font-bold text-gray-700 dark:text-white">
-						<%= input_track.track_name %>
-					</p>
-					<p class="text-gray-600 dark:text-gray-300">
-						<%= input_track.artists %>
-					</p>
-					<p class="text-gray-600 dark:text-gray-300">
-						<%= input_track.album_name %>
-					</p>
-				</div>
-			<% end %>
-		</div>
+		<%= turbo_frame_tag "input_tracks" do %>
+			<%= render partial: "home/input_tracks", locals: { tracks: @input_tracks } %>
+		<% end %>
 
 		<!-- Search Form + Dropdown -->
-		<div class="flex flex-col bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 min-h-[100px]">
-			<%= search_form_for @search, url: url_for(controller: "home", action: "index"), class: "w-full my-auto" do |f| %>
+		<div class="flex flex-col bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 min-h-[100px] mt-4">
+			
+			<%# Search input field %>
+			<%= form_with url: root_path, method: :post, data: { turbo: true }, class: "w-full my-auto", local: false do |form| %>
 				<div class="relative">
 					<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
 					<!-- Search Icon -->
 						<svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
 					</div>
 
-					<%= f.search_field :track_name_or_artists_or_album_name_cont, {
-						placeholder: "Song / artist / album name here...",
-						class: "block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-						} %>
+					<%= form.text_field :q, 
+						value: params.dig(:q, :track_name_or_artists_or_album_name_cont), 
+						name: "q[track_name_or_artists_or_album_name_cont]", 
+						placeholder: "Song / artist / album name here...", 
+						class: "block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
 				</div>
 			<% end %>
-
-			<% if params[:q].present? %>
-				<div class="max-h-96 overflow-y-auto bg-black rounded p-2 space-y-2">
-					<% if @tracks.any? %>
-						<% @tracks.limit(results_limit).each do |track| %>
-							<div class="px-4 py-2 rounded-lg shadow-md hover:bg-blue-800 transition-colors">
-								<%= button_to add_input_track_path, method: :post, params: { track_id: track[:track_id] }, class: "w-full text-left" do %>
-								
-									<p class="text-white font-bold"><%= track.track_name %></p>
-									<p class="text-gray-300"><%= track.artists %></p>
-									<p class="text-gray-300"><%= track.album_name %></p>
-								<% end %>
-							</div>
-						<% end %>
-					<% else %>
-						<p class="text-white">No tracks found with the given filter.</p>
-					<% end %>
-				</div>
+				
+			<%# Search Result Dropdown %>
+			<%= turbo_frame_tag "search_result_tracks" do %>
+				<%= render partial: "home/search_result_tracks", locals: { tracks: @search_result_tracks } %>
 			<% end %>
 		</div>
 
@@ -75,12 +55,10 @@
 	<div class="w-[2] h-full rounded-xl dark:bg-gray-400"></div>
 
 	<!-- RIGHT PANE -->
-	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6 space-y-4">
-		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-			<p class="text-l font-bold text-gray-800 dark:text-white">Recommended song</p>
-			<p class="text-gray-600 dark:text-gray-300">artist</p>
-			<p class="text-gray-600 dark:text-gray-300">album name</p>
-		</div>
+	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6">
+		<%= turbo_frame_tag "recommended_tracks" do %>
+			<%= render partial: "home/recommended_tracks", locals: { tracks: @recommended_tracks } %>
+		<% end %>
 	</div>
 </main>
 

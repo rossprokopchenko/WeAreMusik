@@ -23,7 +23,7 @@ def readTrackDataset(path):
 
 # jsonObjects = readTrackDataset('datasets/archive1/dataset.csv')
 jsonObjects = readTrackDataset('datasets/spotify_millsongdata.csv/tracks_features.csv')
-print(jsonObjects[0])
+print("First record: ", jsonObjects[0])
 
 # id -> track_id
 # name -> track_name

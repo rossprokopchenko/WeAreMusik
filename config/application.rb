@@ -32,7 +32,7 @@ module WeAreMusik
     #   config.after_initialize do
     #     fetchTracksObj = WeAreMusikAPI::Services::FetchTracks.new()
 
-    #     trackResponse = fetchTracksObj.perform
+    #     trackResponse = fetchTracksObj.get_all_tracks
     #     new_tracks = []
 
     #     # puts trackResponse[:data].first

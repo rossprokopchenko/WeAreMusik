@@ -6,14 +6,14 @@ module WeAreMusikAPI
         # @platform_account = params[:platform_account]  
       end
 
-      def perform(options = {})
+      def get_all_tracks(options = {})
         # Get a token
         # access_token_result = WeAreMusikAPI::Services::GetAccessToken.new({ platform_account: @platform_account })
         # return access_token_result if !access_token_result[:success]
 
         # Get Tracks from API
         # tracks_result = get_tracks(access_token_result[:data], options)
-        tracks_result = get_tracks()
+        tracks_result = get_all_tracks_helper()
         if (tracks_result[:success] == false)
           return { success: false, errors: ["Could not get tracks from API"] }
         end
@@ -24,19 +24,52 @@ module WeAreMusikAPI
 
       end
 
+      def get_recommended_tracks(options = {})
+        # Get a token
+        # access_token_result = WeAreMusikAPI::Services::GetAccessToken.new({ platform_account: @platform_account })
+        # return access_token_result if !access_token_result[:success]
+
+        # Get Tracks from API
+        # tracks_result = get_tracks(access_token_result[:data], options)
+          # puts "Input tracks: #{options[:input_tracks]}"
+
+        tracks_result = get_recommended_tracks_helper(options)
+        if (tracks_result[:success] == false)
+          return { success: false, errors: ["Could not get tracks from API"] }
+        end
+
+        puts "Tracks result: #{tracks_result}"
+
+        return { success: true, data: tracks_result[:data][:track_ids] }
+
+      end
+
       private 
         # def get_tracks(access_token, options = {})
-        def get_tracks(options = {})
+        def get_all_tracks_helper(options = {})
           # WeAreMusikAPI::Tracks.new({ access_token: access_token }).list_channels({
-          WeAreMusikAPI::Tracks.new().get_tracks({
+          WeAreMusikAPI::Tracks.new().get_all_tracks({
             params: {
 
             }
           })
         end
 
+        def get_recommended_tracks_helper(options = {})
+          # WeAreMusikAPI::Tracks.new({ access_token: access_token }).list_channels({
+
+
+          WeAreMusikAPI::Tracks.new().get_recommended_tracks({
+            params: {
+              ids: options[:input_tracks]
+            }
+          })
+        end
+
         def map_tracks(raw_result)
-          raw_tracks = raw_result[:data] || []
+          raw_tracks = raw_result[:data][:tracks] || []
+
+          # puts "Raw tracks: #{raw_tracks}"
 
           tracks = raw_tracks.map do |raw_track|
             {
