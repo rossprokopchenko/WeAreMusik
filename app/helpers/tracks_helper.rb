@@ -12,14 +12,6 @@ module TracksHelper
     50
   end
 
-  def user_column_headers
-    %i(id track_name artists album_name).freeze
-  end
-
-  def user_column_fields
-    %i(id track_name artists album_name).freeze
-  end
-
   def display_results_header(count)
     if count > results_limit
       "Your first #{results_limit} results out of #{count} total (try narrowing down your search)"
@@ -28,26 +20,11 @@ module TracksHelper
     end
   end
 
-  def display_sort_column_headers(search)
-
-    user_column_headers.reduce(String.new) do |string, field|
-      string << (tag.th sort_link(search, field, method: action))
-    end
-  end
-
-  def display_search_results(objects)
-    objects.limit(results_limit).reduce(String.new) do |string, object|
-      string << (tag.tr display_search_results_row(object))
-    end
-  end
-
-  def display_search_results_row(object)
-    user_column_fields.reduce(String.new) do |string, field|
-      string << (tag.td object.send(field))
-    end
-  end
-
   def ms_to_minutes_and_seconds(ms)
+    if ms.nil?
+      return "Unknown"
+    end
+
     minutes = ms / 60000
     seconds = ms % 60000 / 1000
 

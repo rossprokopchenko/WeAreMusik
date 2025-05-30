@@ -27,7 +27,7 @@ gem "http"
 gem "net-http"
 
 # For search
-gem "ransack"
+# gem "ransack"
 
 # For background jobs + tracking
 gem "sidekiq", "~> 8.0"
@@ -36,13 +36,19 @@ gem "sidekiq", "~> 8.0"
 gem "activerecord-import"
 
 # For pagination
-gem "kaminari"
+gem 'kaminari'
 
 # For html erb formatting
 gem "htmlbeautifier"
 
-# For UX improvements
-gem 'turbo-rails'
+# Postgresql
+gem 'pg'
+
+# PGSearch
+gem "pg_search"
+
+# For Meilisearch
+gem 'meilisearch-rails'
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"

@@ -1,15 +1,17 @@
 <main class="flex h-full w-full overflow-x-hidden overflow-y-hidden justify-between">
 
 	<!-- LEFT PANE -->
-	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6">
+	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto py-6">
 
 		<!-- Action Div -->
 		<div class="relative w-full flex items-center">
 			<%# Clear button %>
-			<%= button_to 'Clear Tracks', clear_input_tracks_path, 
-				method: :post,
-				class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
-		
+			<div data-controller="search">
+				<%= button_to 'Clear Tracks', clear_input_tracks_path, 
+					method: :post,
+					data: { action: "search#clear" },
+					class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
+			</div>
 			<%# Flash message %>
 			<div id="flash" class="ml-auto">
 				<%= turbo_stream_from "flash" %>
@@ -25,23 +27,26 @@
 		<% end %>
 
 		<!-- Search Form + Dropdown -->
-		<div class="flex flex-col bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 min-h-[100px] mt-4">
+		<div class="flex flex-col bg-white rounded-lg shadow-md dark:bg-gray-800 p-4 min-h-[100px] mt-4 border border-gray-600" data-controller="search">
 			
 			<%# Search input field %>
-			<%= form_with url: root_path, method: :post, data: { turbo: true }, class: "w-full my-auto", local: false do |form| %>
+			<%= form_with url: root_path, method: :get, data: { turbo: true }, class: "w-full my-auto", local: false do |form| %>
 				<div class="relative">
 					<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
 					<!-- Search Icon -->
-						<svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
+					<svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+					</svg>
 					</div>
 
-					<%= form.text_field :q, 
-						value: params.dig(:q, :track_name_or_artists_or_album_name_cont), 
-						name: "q[track_name_or_artists_or_album_name_cont]", 
-						placeholder: "Song / artist / album name here...", 
-						class: "block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+					<%= form.text_field :q,
+					placeholder: "Song, artist, album name here...",
+					value: params[:q],
+					data: { search_target: "input" },
+					class: "search-input block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
 				</div>
 			<% end %>
+
 				
 			<%# Search Result Dropdown %>
 			<%= turbo_frame_tag "search_result_tracks" do %>
@@ -52,7 +57,7 @@
 	</div>
 
 	<!-- VERTICAL DIVIDER -->
-	<div class="w-[2] h-full rounded-xl dark:bg-gray-400"></div>
+	<div class="w-[2] h-full rounded-xl dark:bg-slate-700"></div>
 
 	<!-- RIGHT PANE -->
 	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6">

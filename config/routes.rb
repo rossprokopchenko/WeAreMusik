@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   post 'add_input_track', to: 'home#add_input_track'
   post 'clear_input_tracks', to: 'home#clear_input_tracks', as: :clear_input_tracks
 
+  resources :tracks
+
   get "/tracks", to: "tracks#index"
   get "/tracks/:id", to: "tracks#show"
 

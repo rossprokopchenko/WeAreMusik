@@ -1,12 +1,12 @@
 <% if tracks.any? %>
     <div class="max-h-96 overflow-y-auto bg-black rounded p-2 space-y-2">
-        <%= tracks.limit(results_limit).each do |track| %>
+        <% tracks.limit(results_limit).each do |track| %>
             <div class="px-4 py-2 rounded-lg shadow-md hover:bg-blue-800 transition-colors">
                 <%= button_to add_input_track_path, method: :post, params: { track_id: track[:track_id] }, class: "w-full text-left" do %>
                 
-                    <p class="text-white font-bold"><%= track.track_name %></p>
-                    <p class="text-gray-300"><%= track.artists %></p>
-                    <p class="text-gray-300"><%= track.album_name %></p>
+                    <p class="text-white font-bold"><%= track.name %></p>
+                    <p class="text-gray-300"><%= track.artist_credit&.name %></p>
+                    <p class="text-gray-300"><%= track.recording&.name %></p>
                 
                 <% end %>
             </div>

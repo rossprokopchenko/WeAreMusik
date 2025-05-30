@@ -1,4 +1,4 @@
-<div class="w-half">
+<div class="w-full">
     <div class="text-2xl font-bold">
         Editing profile
     </div>
@@ -10,17 +10,17 @@
         <div class="mt-4">
             <div class="mt-2">
                 <%= form.label :username, style: "display: block" %>
-                <%= form.text_field :username, accept: "image/*", class: "placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
+                <%= form.text_field :username, accept: "image/*", class: "placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-gray-200 px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
             </div>
 
             <div class="mt-2">
                 <%= form.label :profile_picture, style: "display: block" %>
-                <%= form.file_field :profile_picture, accept: "image/*", class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
+                <%= form.file_field :profile_picture, accept: "image/*", class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
             </div>
 
-            <div class="mt-2">
+            <div class="mt-2 w-half rounded-xl">
                 <%= form.label :biography, style: "display: block" %>
-                <%= form.rich_text_area :biography, class: "placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
+                <%= form.rich_text_area :biography, class: "placeholder-gray-400 dark:placeholder-gray-400 rounded-lg border border-gray-200 bg-gray-200 px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
             </div>
         </div>
 
@@ -34,7 +34,12 @@
                 <span class="mx-2">Back</span>
             </button>
 
-            <%= form.submit "Update", class: "ml-auto flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" %>
+            <%= button_tag type: "submit", class: "ml-auto flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg mr-2" viewBox="0 0 16 16">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                </svg>
+                <span>Update</span>
+            <% end %>
         </div>
     <% end %>
 </div>

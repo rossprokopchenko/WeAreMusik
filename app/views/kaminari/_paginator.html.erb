@@ -1,0 +1,46 @@
+
+<%# This partial acts as the main container for Kaminari's pagination.
+  - @tracks: Kaminari::PaginatableArray object from the controller.
+  - total_pages: A helper method available in this context for the total page count.
+  - paginator: The object that renders the individual pagination tags (first_page_tag, page_tag, etc.) inside its block.
+-%>
+
+<%# Condition to show pagination: if @tracks is present and there's more than one page %>
+<% if @tracks.present? && total_pages > 1 %>
+  <nav class="flex items-center justify-between py-3" role="navigation" aria-label="Pagination">
+    <%# --- Small Screen Navigation (Mobile-first) --- %>
+    <div class="flex-1 flex justify-between sm:hidden">
+      <%= link_to_prev_page @tracks, "Prev Page", class: "relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+      <%= link_to_next_page @tracks, "Next Page", class: "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+    </div>
+
+    <%# --- Large Screen Navigation --- %>
+    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+      <div>
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <%= paginator.render do -%>
+            <%# <%= paginator.first_page_tag %>
+            <%= paginator.prev_page_tag %>
+            <% paginator.each_page do |page| -%>
+              <%= paginator.page_tag page %>
+            <% end -%>
+            <%= paginator.next_page_tag %>
+            <%# <%= paginator.last_page_tag %>
+          <% end -%>
+        </nav>
+      </div>
+      <div>
+        <p class="text-sm text-gray-700">
+          Showing
+          <%# Using @tracks directly for pagination summary details %>
+          <span class="font-medium"><%= @tracks.offset_value + 1 %></span>
+          to
+          <span class="font-medium"><%= @tracks.offset_value + @tracks.limit_value %></span>
+          of
+          <span class="font-medium"><%= @tracks.total_count %></span>
+          results
+        </p>
+      </div>
+    </div>
+  </nav>
+<% end %>

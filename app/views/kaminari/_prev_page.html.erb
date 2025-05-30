@@ -1,0 +1,13 @@
+<span class="prev">
+  <% if current_page.first? %>
+    <%# If on the first page, disable the link %>
+    <span aria-current="page" class="z-10 border-gray-200 dark:border-gray-700 dark:bg-gray-900 text-gray-100 relative inline-flex items-center px-2 py-2 rounded-l-md border text-sm font-medium">
+      <%= raw(t 'views.pagination.previous') %>
+    </span>
+  <% else %>
+  <%= link_to raw(t 'views.pagination.previous'), url, remote: remote,
+    data: { turbo_frame: "search_result_tracks" },
+    class: "relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-200 dark:border-gray-700 dark:bg-gray-900 text-gray-100 hover:bg-gray-800 text-sm font-medium"
+  %>
+  <% end %>
+</span>

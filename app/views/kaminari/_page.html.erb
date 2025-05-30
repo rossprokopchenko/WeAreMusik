@@ -1,0 +1,16 @@
+<%# app/views/kaminari/_page.html.erb %>
+
+<span class="page">
+  <% if page.current? %>
+    <%# Current page: Just display the number, styled as active %>
+    <span aria-current="page" class="z-10 border-gray-200 dark:border-gray-700 dark:bg-gray-700 text-gray-100 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+      <%= page %>
+    </span>
+  <% else %>
+    <%# Other pages: Create a link that targets the Turbo Frame %>
+    <%= link_to page, url,
+      data: { turbo_frame: "search_result_tracks" },
+      class: "border-gray-200 dark:border-gray-700 dark:bg-gray-900 text-gray-100 hover:bg-gray-800 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+    %>
+  <% end %>
+</span>

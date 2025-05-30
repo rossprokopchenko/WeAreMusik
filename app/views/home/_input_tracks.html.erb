@@ -2,15 +2,17 @@
     <div class="space-y-2 mt-4">
         <% tracks.each do |track| %>
             <div class="justify-between flex flex-col px-4 py-3 bg-white rounded-lg shadow-md dark:bg-gray-800 min-h-[100px]">
-                <a href="/tracks/<%=track.track_id%>" target="_blank" class="text-l font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline" tabindex="0" role="link">
-                    <%= track.track_name %>
-                </a>
-                <p class="text-gray-600 dark:text-gray-300">
-                    <%= track.artists %>
-                </p>
-                <p class="text-gray-600 dark:text-gray-300">
-                    <%= track.album_name %>
-                </p>
+                <%= link_to track_path(track[:track_id]), target: "_blank" do %>
+                    <p class="text-l font-bold text-gray-700 dark:text-white">
+                        <%= track[:track_name] %>
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        <%= track[:artists] %>
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        <%= track[:album_name] %>
+                    </p>
+                <% end %>
             </div>
         <% end %>
     </div>
