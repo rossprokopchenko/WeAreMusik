@@ -12,7 +12,7 @@ default: &default
 
 development:
   <<: *default
-  database: musicbrainz
+  database: <%= Rails.application.credentials.dig(:pg_database) %>
   username: <%= Rails.application.credentials.dig(:pg_user) %>
   password: <%= Rails.application.credentials.dig(:pg_password) %>
   host: localhost

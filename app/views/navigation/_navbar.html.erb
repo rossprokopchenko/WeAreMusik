@@ -1,0 +1,41 @@
+<nav class="border-gray-200 bg-slate-700 h-20 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)]">
+  <div class="max-w-screen-xl mx-auto flex items-center justify-between h-full">
+    
+    <!-- Left logo -->
+    <a href="/" class="flex items-center h-full">
+      <%= image_tag("logo.png", style: "width:50px;height:50px;border-radius:5px;") %>
+      <span class="text-2xl font-semibold text-white ml-6">WeAreMusik</span>
+    </a>
+
+    <!-- Center nav -->
+    <ul class="absolute left-1/2 transform -translate-x-1/2 flex space-x-10 text-white">
+      <li>
+        <a href="/" class="h-full flex items-center px-3 rounded-sm <%= nav_link_class('home') %>">
+          Home
+        </a>
+      </li>
+      <% if authenticated? %>
+        <li>
+          <a href="/search" class="h-full flex items-center px-3 rounded-sm <%= nav_link_class('search') %>">
+            Search
+          </a>
+        </li>
+        <li>
+          <a href="/user/<%= cookies[:user_gid] %>" class="h-full flex items-center py-2 px-3 rounded-sm <%= nav_link_class('user') %>">
+            Profile
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Right auth -->
+    <div class="flex items-center space-x-4">
+      <% if !authenticated? %>
+        <%= link_to "Login", new_session_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 cursor-pointer" %>
+      <% else %>
+        <%= button_to "Log out", session_path, method: :delete, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 cursor-pointer" %>
+      <% end %>
+    </div>
+
+  </div>
+</nav>

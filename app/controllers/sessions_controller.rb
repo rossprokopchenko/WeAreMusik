@@ -9,7 +9,8 @@ class SessionsController < ApplicationController
 
   def create
     if user = User.authenticate_by(params.permit(:email_address, :password))
-      cookies[:user_id] = user.id
+      puts "User authenticated successfully: #{user.gid}"
+      cookies[:user_gid] = user.gid
       start_new_session_for user
       redirect_to root_path, notice: "Welcome back, #{user.username}!"
     else

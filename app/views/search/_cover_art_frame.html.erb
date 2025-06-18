@@ -1,0 +1,7 @@
+<%# app/views/tracks/_cover_art_frame.html.erb %>
+
+<% if release && release.cover_art.attached? %>
+    <%= image_tag url_for(release.cover_art), class: "min-h-64 min-w-64 max-h-64 max-w-64 flex-none rounded-l-xl bg-gray-50", alt: "Cover Art" %>
+<% else %>
+    <div class="min-h-64 min-w-64 flex-none rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 text-5xl">:(</div>
+<% end %>

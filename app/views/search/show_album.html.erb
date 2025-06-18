@@ -1,0 +1,83 @@
+<%= turbo_stream_from "release_#{@release.gid}_cover_art" if @release %>
+
+<%
+  displayable_release_labels = @release.release_labels.reject do |rl|
+    rl.label.present? && rl.label.name == "[no label]"
+  end
+%>
+
+<div class="flex flex-col w-full">
+
+    <div class="text-2xl font-bold">
+        <%= @release.name %>
+    </div>
+
+    <div class="flex flex-col mt-4 rounded-l-xl dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+        <div class="flex flex-row">
+            <div class="cover-art-display">
+                <%# Use a turbo_frame_tag to allow dynamic updates of the image %>
+                <%# The ID should be unique, e.g., based on the release ID %>
+                <%= turbo_frame_tag "release_cover_art_#{@release.gid}" do %>
+                    <%# Render the partial here, passing the @release object as 'release' local %>
+                    <%= render partial: 'search/cover_art_frame', locals: { release: @release } %>
+                <% end %>
+            </div>
+
+            <div class="flex flex-col items-center my-auto w-full">
+                <div class="text-xl text-center">
+                    <%= @release.name %>
+                </div>
+                <div class="text-lg text-gray-400 text-center">
+                    <%= @release.artist_credit&.name %>
+                </div>
+            </div>
+
+            <div class="flex flex-col ml-auto text-right p-4 w-1/3">
+                
+                <div>
+                    <%= @release.release_group&.primary_type&.name %> 
+                    
+                    <% if @release.release_status&.name %>
+                        (<%= @release.release_status&.name %>)
+                    <% end %>
+                </div>
+
+                <div class="mt-auto">
+                    <div>
+                        <% @release.release_countries.take(1).each do |release_country|%>
+                            <div class="text-md text-gray-400">
+                                <%= month_to_str(release_country.date_month) %> <%= release_country.date_year %>
+                            </div>
+                        <% end %>
+                        <% @release.release_countries.take(3).each do |release_country| %>
+                            <div class="text-md text-gray-400">
+                                <%= release_country.country_area&.name %>
+                            </div>
+                        <% end %>
+                    </div>
+                    <% if displayable_release_labels.present? %>
+                        <div class="text-md text-gray-400">
+                            <%= label_str(displayable_release_labels) %>
+                        </div>
+                    <% else %>
+                        <div class="text-md text-gray-400">
+                            No release labels
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <div class="text-lg">
+                Tracks
+            </div>
+
+            <% @release.tracks.each do |track| %>
+                <%= track.gid %>
+            <% end %>
+        </div>
+    </div>
+
+    
+</div>

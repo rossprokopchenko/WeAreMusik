@@ -6,23 +6,23 @@ module WeAreMusikAPI
         # @platform_account = params[:platform_account]  
       end
 
-      def get_all_tracks(options = {})
-        # Get a token
-        # access_token_result = WeAreMusikAPI::Services::GetAccessToken.new({ platform_account: @platform_account })
-        # return access_token_result if !access_token_result[:success]
+      # def get_all_tracks(options = {})
+      #   # Get a token
+      #   # access_token_result = WeAreMusikAPI::Services::GetAccessToken.new({ platform_account: @platform_account })
+      #   # return access_token_result if !access_token_result[:success]
 
-        # Get Tracks from API
-        # tracks_result = get_tracks(access_token_result[:data], options)
-        tracks_result = get_all_tracks_helper()
-        if (tracks_result[:success] == false)
-          return { success: false, errors: ["Could not get tracks from API"] }
-        end
+      #   # Get Tracks from API
+      #   # tracks_result = get_tracks(access_token_result[:data], options)
+      #   tracks_result = get_all_tracks_helper()
+      #   if (tracks_result[:success] == false)
+      #     return { success: false, errors: ["Could not get tracks from API"] }
+      #   end
 
-        tracks = map_tracks(tracks_result)
+      #   tracks = map_tracks(tracks_result)
 
-        return { success: true, data: tracks }
+      #   return { success: true, data: tracks }
 
-      end
+      # end
 
       def get_recommended_tracks(options = {})
         # Get a token

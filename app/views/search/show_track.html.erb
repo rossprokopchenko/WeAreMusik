@@ -1,0 +1,160 @@
+
+<%= turbo_stream_from "release_#{@release.gid}_cover_art" if @release %>
+
+<%
+  displayable_release_labels = @track.release_labels.reject do |rl|
+    rl.label.present? && rl.label.name == "[no label]"
+  end
+%>
+
+<div class="flex flex-col w-full">
+
+    <div class="text-2xl font-bold">
+        <%= @track.name %>
+    </div>
+
+    <div class="flex flex-row mt-4 rounded-l-xl dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+        <div class="cover-art-display">
+            <%# Use a turbo_frame_tag to allow dynamic updates of the image %>
+            <%# The ID should be unique, e.g., based on the release ID %>
+            <%= turbo_frame_tag "release_cover_art_#{@release.gid}" do %>
+                <%# Render the partial here, passing the @release object as 'release' local %>
+                <%= render partial: 'search/cover_art_frame', locals: { release: @release } %>
+            <% end %>
+        </div>
+
+        <div class="flex flex-col items-center my-auto w-full">
+            <div class="text-xl text-center">
+                <%= @track.name %>
+            </div>
+            <div class="text-lg text-gray-400 text-center">
+                <%= @track.artist_credit&.name %>
+            </div>
+            <%# <div class="text-center">
+            </div> %>
+        </div>
+
+        <div class="flex flex-col ml-auto text-right p-4 w-1/3">
+            
+            <% if @track.medium&.format&.id == 12 %>
+                <div>
+                    Available online (<%= @track.medium&.format&.name %>)
+                </div>
+            <% end %>
+            
+            <% if @track.recording&.video %>
+                <div>
+                    Has music video
+                </div>
+            <% end %>
+
+            <div class="mt-auto">
+                <div>
+                    <% @track.release&.release_countries.take(1).each do |release_country|%>
+                        <div class="text-md text-gray-400">
+                            <%= month_to_str(release_country.date_month) %> <%= release_country.date_year %>
+                        </div>
+                    <% end %>
+                    <% @track.release&.release_countries.take(3).each do |release_country| %>
+                        <div class="text-md text-gray-400">
+                            <%= release_country.country_area&.name %>
+                        </div>
+                    <% end %>
+                </div>
+                <% if displayable_release_labels.present? %>
+                    <div class="text-md text-gray-400">
+                        <%= label_str(displayable_release_labels) %>
+                    </div>
+                <% else %>
+                    <div class="text-md text-gray-400">
+                        No release labels
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+
+    <% if @track.release&.release_group&.primary_type&.id != 2 %>
+        <div class="w-full mt-8 px-8">
+            <div class="text-lg font-semibold">
+                Part of album
+            </div>
+            
+            <div class="flex flex-row mt-4 rounded-l-xl dark:bg-gray-900 border border-gray-200 dark:border-gray-700 py-2 px-8 items-center">
+                <%= @track.release&.name  %>
+
+                <%= @track.release&.barcode %>
+
+                <%= @track.release&.comment %>
+
+                <div class="ml-auto items-center flex flex-row">
+                    <div class="items-center text-gray-400 mr-4">
+                        <% if @track.release&.release_status&.name %>
+                            <%= @track.release&.release_status&.name %>
+                        <% end %>
+
+                        <%= @track.release&.release_group&.primary_type&.name %>
+                    </div>
+
+                    <a href="<%= search_album_path(@track.release&.gid) %>" target="_blank">
+                        <button style="padding: 10px; width: 50px; height: 50px;"
+                            class="px-4 py-2 font-medium text-gray-600 sm:px-6 dark:text-gray-300"
+                        > 
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                width="100%"       height="100%"      fill="currentColor"
+                                class="bi bi-question-circle"
+                                viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                            </svg>
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+            
+        </div>
+    <% else %>
+
+    <% end %>
+
+    <div class="w-full mt-8 px-8">
+        <div class="text-lg font-semibold">
+            Artist
+        </div>
+        
+        <div class="flex flex-row mt-4 rounded-l-xl dark:bg-gray-900 border border-gray-200 dark:border-gray-700 py-2 px-8 items-center">
+            <%= @track.artist_credit&.name  %>
+
+            <% @track.artist_credit&.artist_credit_names.each do |artist_credit_name| %>
+                <%= artist_credit_name.artist&.gid %>
+            <% end %>
+
+
+            <div class="ml-auto items-center flex flex-row">
+                <div class="items-center text-gray-400 mr-4">
+                    <% if @track.release&.release_status&.name %>
+                        <%= @track.release&.release_status&.name %>
+                    <% end %>
+
+                    <%= @track.release&.release_group&.primary_type&.name %>
+                </div>
+
+                <a href="<%= search_album_path(@track.release&.gid) %>" target="_blank">
+                    <button style="padding: 10px; width: 50px; height: 50px;"
+                        class="px-4 py-2 font-medium text-gray-600 sm:px-6 dark:text-gray-300"
+                    > 
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="100%"       height="100%"      fill="currentColor"
+                            class="bi bi-question-circle"
+                            viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                        </svg>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -5,41 +5,26 @@
         <table class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
                 <tr>
-                    <th scope="col" class="w-1/4 py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <th scope="col" class="w-full py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         Artist
                     </th>
-                    <th scope="col" class="w-1/3 py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        Track name
-                    </th>
-                    <th scope="col" class="w-1/3 py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        Album
-                    </th>
+
                     <th scope="col" class="relative py-3.5 px-4">
                         <span class="sr-only">Details</span>
                     </th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                <% if @tracks.any? %>
-                    <% @tracks.each do |track| %>
+                <% if results.any? %>
+                    <% results.each do |artist| %>
                         <tr class="transition-colors duration-100 hover:bg-gray-800">
                             <td class="px-4 py-4 font-medium text-gray-200">
                                 <div>
-                                    <%= track.artist_credit&.name %>
+                                    <%= artist.name %>
                                 </div>
                             </td>
-                            <td class="max-w-1/3 px-4 py-4 font-medium text-gray-200">
-                                <div>
-                                    <%= track.name %>
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 font-medium text-gray-200">
-                                <div>
-                                    <%= track.release&.name %>
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 font-medium whitespace-nowrap text-gray-200">
-                                <a href="<%= track_url(track) %>" target="_blank">
+                            <td class="px-8 py-4 font-medium whitespace-nowrap text-gray-200">
+                                <a href="<%= search_artist_path(artist.gid) %>" target="_blank">
                                     <button style="padding: 10px; width: 50px; height: 50px;"
                                         class="px-4 py-2 font-medium text-gray-600 sm:px-6 dark:text-gray-300"
                                     > 
@@ -58,7 +43,7 @@
                 <% else %>
                     <tr>
                         <td colspan="4" class="px-4 py-4 text-gray-500 dark:text-gray-400">
-                            No results found.
+                            No artists found.
                         </td>
                     </tr>
                 <% end %>
@@ -68,6 +53,6 @@
     </div>
 
     <div class="pagination mt-3">
-        <%= paginate @tracks %>
+        <%= paginate results, renderer: TailwindKaminariRenderer %>
     </div>
 </div>

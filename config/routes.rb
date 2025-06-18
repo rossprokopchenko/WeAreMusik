@@ -25,12 +25,15 @@ Rails.application.routes.draw do
 
   resources :tracks
 
-  get "/tracks", to: "tracks#index"
-  get "/tracks/:id", to: "tracks#show"
+  get "/search", to: "search#index", as: :search
+
+  get "/search/track/:gid", to: "search#show_track", as: :search_track
+  get "/search/album/:gid", to: "search#show_album", as: :search_album
+  get "/search/artist/:gid", to: "search#show_artist", as: :search_artist
 
   # get "/profile", to: "profile#index"
 
-  resources :user
+  resources :user, param: :gid
 
   # post "profile/update"
 

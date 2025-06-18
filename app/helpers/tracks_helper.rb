@@ -1,51 +1,32 @@
 module TracksHelper
-  def action
-    if action_name == "advanced_search"
-      :post
-    else
-      :get
+  def month_to_str(month)
+    case month
+      when 1 then "January"
+      when 2 then "February"
+      when 3 then "March"
+      when 4 then "April"
+      when 5 then "May"
+      when 6 then "June"
+      when 7 then "July"
+      when 8 then "August"
+      when 9 then "September"
+      when 10 then "October"
+      when 11 then "November"
+      when 12 then "December"
+      else "Unknown Month"
     end
   end
 
-  def results_limit
-    # max number of search results to display
-    50
-  end
+  def label_str(displayable_release_labels)
+    output = ""
 
-  def display_results_header(count)
-    if count > results_limit
-      "Your first #{results_limit} results out of #{count} total (try narrowing down your search)"
-    else
-      "Your #{pluralize(count, 'result')}"
-    end
-  end
-
-  def ms_to_minutes_and_seconds(ms)
-    if ms.nil?
-      return "Unknown"
+    displayable_release_labels.each do |label|
+      label_name = label.label.name
+      output += label_name
+      output += " • " unless label == displayable_release_labels.last
     end
 
-    minutes = ms / 60000
-    seconds = ms % 60000 / 1000
-
-    minutes_string = "minutes"
-    seconds_string = "seconds"
-    and_string = "and"
-
-    if minutes == 1
-      minutes_string = "minute"
-    elsif minutes == 0
-      minutes_string = ""
-      and_string = ""
-    end
-
-    if seconds == 1
-      seconds_string = "second"
-    elsif seconds == 0
-      seconds_string = ""
-    end
-
-    return "#{minutes} #{minutes_string} #{and_string} #{seconds} #{seconds_string}"
+    return output
   end
 
 end

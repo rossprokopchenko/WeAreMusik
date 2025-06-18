@@ -1,0 +1,37 @@
+<div class="grow flex flex-col max-h-[calc(100vh-10rem)] py-6">
+  <%# Top row: Search Input and Dropdown %>
+  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-1/2" data-controller="search">
+    <%# The form itself should grow to take available space %>
+    <div class="relative w-full">
+      <!-- SVG Icon -->
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <!-- Use your own SVG here -->
+        <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+        </svg>
+      </div>
+
+      <!-- Input Field -->
+      <input
+        type="text"
+        placeholder="Search here..."
+        data-search-target="search"
+        data-action="input->search#search"
+        class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+    </div>
+
+    <%# Dropdown %>
+    <div class="ml-4 w-auto">
+      <%= render partial: "search/filter_dropdown", locals: { current_search_by: @search_type, current_query: params[:q] } %>
+    </div>
+  </div>
+
+  <%= turbo_frame_tag "search_result_table", class: "w-full flex flex-col gap-4 mt-4" do %>
+    <div class="flex flex-col w-full">
+      <div class="flex-grow overflow-y-auto">
+        <%= render partial: "search/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results } %>
+      </div>
+    </div>
+  <% end %>
+</div>

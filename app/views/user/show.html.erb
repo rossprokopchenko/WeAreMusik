@@ -1,75 +1,138 @@
 <% cache @user do %>
-    <div class="flex flex-col w-full py-6 overflow-y-auto">
-        
-        <div class="flex flex-row">
-            <div class="text-2xl">
-                Profile
-            </div>
+  <div class="flex flex-row w-full py-6 overflow-y-auto">
+    
+    <!-- Left profile panel -->
+    <div class="flex flex-col w-1/3 h-full dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl">
+      
+      <!-- Curved background with profile image -->
+      <div data-controller="profile" class="relative w-full rounded-t-2xl">
+        <div class="relative flex justify-center items-end h-40">
+          
+          <!-- Circle background -->
+          <div data-profile-target="circle"
+              class="absolute inset-0 bg-gray-200 dark:bg-gray-800 duration-500 rounded-b-[6rem] transition-colors rounded-t-2xl z-0">
+          </div>
 
-            <div class="ml-auto">
-                <button onclick="location.href='<%= edit_user_path(@user) %>'" class="ml-5 flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                    </svg>
+          <!-- Visible profile image -->
+          <%= image_tag(@user.profile_picture.presence || "default_avatar.jpg",
+            class: "w-32 h-32 rounded-full border-4 border-gray-900 dark:border-gray-900 shadow-lg z-10 relative mb-5",
+            data: { profile_target: "visibleImage" }) %>
 
-                    <span class="mx-2">Edit</span>
-                </button>
+          <!-- Hidden clone for color analysis -->
+          <%= image_tag(@user.profile_picture.presence || "default_avatar.jpg",
+            style: "display: none",
+            crossorigin: "anonymous",
+            data: { profile_target: "hiddenImage" }) %>
+
+        </div>
+      </div>
+
+
+      <!-- Profile info -->
+      <div class="flex flex-col pt-18 px-6 w-full h-full">
+        <div class="text-xl font-semibold text-white">
+          <%= @user.username %>
+        </div>
+
+        <div>
+            <div class="flex items-center space-x-2 mt-1">
+                <% @user.user_social_links.each do |link| %>
+                <a href="<%= link.url %>" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300">
+                    <%= image_tag("icons/#{link.platform}.svg", class: "w-5 h-5") %>
+                </a>
+                <% end %>
             </div>
         </div>
 
-        <%# <%= button_to "Delete", edit_profile_path(@user), user: @user, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-        
-        <div class="flex flex-row w-full mt-4 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-l-xl">
-            
-
-            <div class="">
-                <%= image_tag(@user.profile_picture.presence || "default_avatar.jpg", class: "w-64 h-64 rounded-l-xl") %>
-            </div>
-            
-            <div class="flex flex-col p-5 w-1/3">
-                <div class="text-2xl ">
-                    <%= @user.username %>
-                </div>
-
-                <div class="my-auto text-sm text-gray-300 dark:text-gray-300">
-                    <%= @user.biography.body %>
-                </div>
-
-                <div class="mt-auto">
-                    <button onclick="location.href=''" class="flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                        </svg>
-
-                        <span class="mx-2">Follow</span>
-                    </button>
-                </div>
-
-                <!--div class="mt-2">
-                    Created at: <%= @user.created_at %>
-                </div-->
+        <div>
+            <div class="flex items-center space-x-2 mt-2">
+                <span class="text-sm text-gray-400 dark:text-gray-300">
+                    <%= @user.followers.count %> Followers
+                </span>
+                <span class="text-sm text-gray-400 dark:text-gray-300">
+                    <%= @user.following.count %> Following
+                </span>
             </div>
         </div>
 
-        <div class="mt-16 px-8">
-            <div class="text-xl">
-                Favourite Artists
-            </div>
-
-            <div class="flex flex-row w-full mt-2 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 h-64">
-
-            </div>
+        <div class="text-sm text-gray-300 dark:text-gray-300 mt-4">
+          <%= @user.biography.body %>
         </div>
 
-        <div class="mt-16 px-8">
-            <div class="text-xl">
-                Favourite Albums
+        <div class="">
+          <button onclick="location.href=''" class="mt-9 flex items-center cursor-pointer w-full px-4 py-2 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+            </svg>
+            <span class="mx-auto">Follow</span>
+          </button>
+        </div>
+
+        <div class="flex justify-center items-center space-x-4 my-auto">
+            <div class="flex flex-col items-center px-4 py-2 rounded-lg">
+                <span class="text-lg font-semibold text-white text-center">
+                    <%= @user.saved_releases.count %>
+                </span>
+                <span class="text-sm text-gray-400 dark:text-gray-300 text-center">
+                    Saved Albums
+                </span>
             </div>
-
-            <div class="flex flex-row w-full mt-2 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 h-64">
-
+            <div class="flex flex-col items-center px-4 py-2 rounded-lg">
+                <span class="text-lg font-semibold text-white text-center">
+                    <%= @user.saved_artists.count %>
+                </span>
+                <span class="text-sm text-gray-400 dark:text-gray-300 text-center">
+                    Saved Artists
+                </span>
+            </div>
+            <div class="flex flex-col items-center px-4 py-2 rounded-lg">
+                <span class="text-lg font-semibold text-white text-center">
+                    <%= @user.liked_tracks.count %>
+                </span>
+                <span class="text-sm text-gray-400 dark:text-gray-300 text-center">
+                    Liked Tracks
+                </span>
             </div>
         </div>
-        
+      </div>
+
+      <!-- Edit profile link -->
+      <div class="mt-auto mb-6 mx-auto">
+        <a href=<%= edit_user_path(@user) %> class="text-blue-400 underline hover:text-blue-300">
+          Edit profile
+        </a>
+      </div>
     </div>
+
+    <!-- Right content panel -->
+    <div class="flex flex-col border border-gray-200 dark:border-gray-700 w-full ml-16 rounded-2xl p-8">
+      
+      <!-- Favourite Artists -->
+      <div class="">
+        <div class="flex flex-row">
+          <div class="text-xl text-white">Favourite Artists</div>
+          <div class="ml-auto">
+            <a href="#" class="underline text-blue-400 hover:text-blue-300">See all</a>
+          </div>
+        </div>
+        <div class="flex flex-row w-full mt-2 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 h-64">
+          <!-- Content here -->
+        </div>
+      </div>
+
+      <!-- Favourite Albums -->
+      <div class="mt-auto mb-0">
+        <div class="flex flex-row">
+          <div class="text-xl text-white">Favourite Albums</div>
+          <div class="ml-auto">
+            <a href="#" class="underline text-blue-400 hover:text-blue-300">See all</a>
+          </div>
+        </div>
+        <div class="flex flex-row w-full mt-2 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 h-64">
+          <!-- Content here -->
+        </div>
+      </div>
+
+    </div>
+  </div>
 <% end %>

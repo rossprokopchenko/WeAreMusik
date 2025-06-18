@@ -1,4 +1,6 @@
 class Artist < ApplicationRecord
+  include Meilisearch::Rails
+
   self.table_name = "artist"
   self.inheritance_column = :_type_disabled
   
@@ -32,7 +34,19 @@ class Artist < ApplicationRecord
   validates :name, presence: true
   validates :sort_name, presence: true
 
-  # You can add enums or references if needed for type, area, gender
+  meilisearch do
+    searchable_attributes %i[name]
+
+    # Define attributes that can be used for filtering
+    # filterable_attributes %i[]
+
+    # Define attributes that can be used for sorting.
+    # Useful for sorting by relevance, name, length, etc.
+    sortable_attributes %i[name]
+
+    # Attributes to display in search results.
+    displayed_attributes %i[id name]
   
-  # Scopes or methods for dates could be added, e.g., to get full begin/end dates
+  end
+
 end

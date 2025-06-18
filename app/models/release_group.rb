@@ -1,5 +1,7 @@
 class ReleaseGroup < ApplicationRecord
   self.table_name = "release_group"
+  
+  self.inheritance_column = nil
 
   has_many :releases
   belongs_to :primary_type, class_name: "ReleaseGroupPrimaryType", foreign_key: "type"

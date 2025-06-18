@@ -11,8 +11,10 @@ class UserController < ApplicationController
   end
 
   def update
+    puts "Updating user with params: #{user_params.inspect}"
+
     if @user.update(user_params)
-      redirect_to @user
+      redirect_to user_path(@user), notice: 'User profile was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -26,11 +28,20 @@ class UserController < ApplicationController
 
   private
     def set_user
-      @user = User.find(cookies[:user_id])
+      # IMPORTANT: Change from find(params[:id]) to find_by!(gid: params[:gid])
+      puts "Parameters received: #{params.inspect}"
+      @user = User.find_by!(gid: params[:gid])
+    rescue ActiveRecord::RecordNotFound
+      # Handle case where user with that GID is not found
+      puts "Profile not found"
+      flash[:alert] = "User profile not found."
+      redirect_to user_path(cookies[:user_gid]) # Or wherever you want to redirect
     end
 
     def user_params
-      params.expect(user: [ :user_id, :username, :biography, :profile_picture ])
+      params.expect(user: [ :user_id, :gid, :username, :biography, :profile_picture, user_social_links_attributes: [:id, :platform, :url, :_destroy] ])
     end
+
+
 
 end

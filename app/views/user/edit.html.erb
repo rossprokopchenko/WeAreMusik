@@ -1,45 +1,108 @@
 <div class="w-full">
-    <div class="text-2xl font-bold">
-        Editing profile
+  <div class="text-2xl font-bold">Editing profile</div>
+
+  <%= form_with model: @user, data: {
+        controller: "profile-edit",
+        profile_edit_biography_max_length_value: 100
+      } do |form| %>
+
+    <div class="flex flex-col">
+
+      <!-- Username -->
+      <div class="mt-4">
+        <label class="block">Username</label>
+        <%= form.text_field :username,
+              class: "mt-2 placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-gray-200 px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
+      </div>
+
+      <!-- Profile Picture -->
+      <div class="mt-4">
+        <label class="block">Profile picture</label>
+        <%= form.file_field :profile_picture,
+              data: { profile_edit_target: "fileInput" },
+              accept: "image/*",
+              class: "mt-2 py-2.5 px-5 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg border border-gray-200 hover:text-blue-700 cursor-pointer" %>
+        <div data-profile-edit-target="fileError" class="text-red-600 mt-2 hidden">File is too large (max 5MB).</div>
+      </div>
+
+      <!-- Biography -->
+      <div class="mt-4 w-half rounded-xl">
+        <label class="block mb-2">Biography</label>
+
+        <trix-toolbar id="custom-toolbar">
+          <div class="trix-button-row">
+            <span class="trix-button-group">
+              <button type="button" class="trix-button trix-button--icon-bold" data-trix-attribute="bold" title="Bold">Bold</button>
+              <button type="button" class="trix-button trix-button--icon-italic" data-trix-attribute="italic" title="Italic">Italic</button>
+              <button type="button" class="trix-button trix-button--icon-strike" data-trix-attribute="strike" title="Strikethrough">Strikethrough</button>
+            </span>
+            <span class="trix-button-group">
+              <button type="button" class="trix-button trix-button--icon-undo" data-trix-action="undo" title="Undo">Undo</button>
+              <button type="button" class="trix-button trix-button--icon-redo" data-trix-action="redo" title="Redo">Redo</button>
+            </span>
+          </div>
+        </trix-toolbar>
+
+        <%= form.rich_text_area :biography,
+              toolbar: "custom-toolbar",
+              class: "placeholder-gray-400 dark:placeholder-gray-400 rounded-lg border border-gray-800 bg-gray-200 px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300",
+              data: { profile_edit_target: "biographyEditor" } %>
+
+        <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Characters remaining: <span data-profile-edit-target="biographyCount">100</span>
+        </div>
+      </div>
+
+      <!-- Social Media Section -->
+      <div class="max-w-md space-y-4 mt-6">
+        <label for="profile-edit-select" class="block mb-2">Social Media Links</label>
+
+        <div class="flex items-center space-x-4">
+          <!-- Dropdown -->
+          <select
+            id="profile-edit-select"
+            data-profile-edit-target="select"
+            data-action="change->profile-edit#updateValue"
+            class="block w-40 p-2 border rounded border-gray-500 bg-gray-200 text-gray-700"
+          >
+            <option value="">Select one</option>
+            <option value="discord">Discord</option>
+            <option value="spotify">Spotify</option>
+            <option value="youtube">YouTube</option>
+          </select>
+
+          <!-- Input -->
+          <input
+            type="text"
+            data-profile-edit-target="platformInput"
+            class="block w-full p-2 border rounded bg-gray-200 text-gray-700"
+            placeholder="Platform value"
+          />
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-row w-full mt-16">
+        <button onclick="location.href='<%= user_path(@user) %>'" type="button"
+          class="flex cursor-pointer items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+          </svg>
+          <span class="mx-2">Back</span>
+        </button>
+
+        <%= button_tag type: "submit",
+              class: "ml-auto flex cursor-pointer items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-check-lg mr-2" viewBox="0 0 16 16">
+            <path
+              d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+          </svg>
+          <span>Update</span>
+        <% end %>
+      </div>
     </div>
-
-    <%= form_with model: @user do |form|%>
-    
-        <%# The attributes to edit %>
-
-        <div class="mt-4">
-            <div class="mt-2">
-                <%= form.label :username, style: "display: block" %>
-                <%= form.text_field :username, accept: "image/*", class: "placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-gray-200 px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
-            </div>
-
-            <div class="mt-2">
-                <%= form.label :profile_picture, style: "display: block" %>
-                <%= form.file_field :profile_picture, accept: "image/*", class: "py-2.5 px-5 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" %>
-            </div>
-
-            <div class="mt-2 w-half rounded-xl">
-                <%= form.label :biography, style: "display: block" %>
-                <%= form.rich_text_area :biography, class: "placeholder-gray-400 dark:placeholder-gray-400 rounded-lg border border-gray-200 bg-gray-200 px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:focus:border-blue-300" %>
-            </div>
-        </div>
-
-        <%# Bottom action buttons %>
-        <div class="flex flex-row w-full mt-4">
-            <button onclick="location.href='<%= user_path(@user) %>'" class="flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
-                </svg>
-
-                <span class="mx-2">Back</span>
-            </button>
-
-            <%= button_tag type: "submit", class: "ml-auto flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg mr-2" viewBox="0 0 16 16">
-                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-                </svg>
-                <span>Update</span>
-            <% end %>
-        </div>
-    <% end %>
+  <% end %>
 </div>

@@ -20,53 +20,15 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
     <%= javascript_importmap_tags %>
   </head>
 
   <body class="bg-gradient-to-b from-slate-800 to-slate-950 text-gray-100">
-    
-    <nav class="border-gray-200 bg-slate-700 h-16 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)]">
-      <div class="max-w-screen-xl mx-auto flex justify-between h-full">
-        <a href="/" class="flex items-center space-x-3 h-full">
-          <%= image_tag("logo.png", style: "width:30px;height:30px;border-radius:5px;") %>
-          <span class="self-center text-2xl font-semibold dark:text-white">WeAreMusik</span>
-        </a>
-        <div class="h-full">
-          <ul class="h-full flex items-stretch space-x-8">
-            <li class="h-full flex items-center">
-                <a href="/" class="flex items-center h-full block py-2 px-3 rounded-sm 
-                  <%= nav_link_class('home') %>">
-                  Home
-                </a>
-              </li>
-           <% if authenticated? %>
-              <li class="h-full flex items-center">
-                <a href="/tracks" class="flex items-center h-full block py-2 px-3 rounded-sm 
-                  <%= nav_link_class('tracks') %>">
-                  Tracks
-                </a>
-              </li>
-              <li class="h-full flex items-center">
-                <a href="/user/<%= cookies[:user_id] %>" class="flex items-center h-full block py-2 px-3 rounded-sm 
-                  <%= nav_link_class('user') %>">
-                  Profile
-                </a>
-              </li>
-            <% end %>
-            <% if !authenticated? %>
-              <li>
-                <%= link_to "Login", new_session_path, class: "flex items-center h-full block py-2 px-3 rounded-sm #{nav_link_class('sessions')}"%>
-              </li>
-            <% else %>
-              <%= button_to "Log out", session_path, method: :delete, class: 'flex items-center h-full block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer' %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <%= render "navigation/navbar" %>
 
-    <main class="container max-w-screen-xl mx-auto py-8 flex overflow-y-hidden" style="height: calc(100vh - 65px);">
+    <main class="container max-w-screen-xl mx-auto py-8 flex overflow-y-hidden" style="height: calc(100vh - 80px);">
       <%= yield %>
     </main>
 
