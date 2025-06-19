@@ -1,13 +1,21 @@
 class UserController < ApplicationController
+  include UserHelper
+
   before_action :set_user, only: %i[ index show edit update ]
 
   def index
+
   end
 
   def show
+    @user = User.find_by!(gid: params[:gid])
+    @page_title = "#{@user.username}'s Profile - WeAreMusik"
+
+    @favorite_releases = @user.releases.includes(:artist_credit).limit(10)
   end
 
   def edit
+    @page_title = "Edit Profile - WeAreMusik"
   end
 
   def update

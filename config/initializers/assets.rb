@@ -8,3 +8,4 @@ Rails.application.config.assets.version = "1.0"
 
 # Add Tailwind CSS build output to the asset load path
 Rails.application.config.assets.paths << Rails.root.join("app/assets/tailwind")
+Rails.application.config.assets.precompile += %w( favicon.png )

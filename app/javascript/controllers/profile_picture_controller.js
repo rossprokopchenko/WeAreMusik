@@ -1,5 +1,7 @@
+// app/javascript/controllers/profile_picture_controller.js
 import { Controller } from "@hotwired/stimulus"
 
+// Helper: lighten/darken RGB by %
 function shadeRGBColor([r, g, b], percent) {
   return [
     Math.min(255, Math.max(0, r + r * percent)),
@@ -13,32 +15,30 @@ function rgbString([r, g, b]) {
 }
 
 export default class extends Controller {
-  static targets = ["circle", "coverContainer"]
+  static targets = ["circle", "hiddenImage"]
 
   connect() {
-    const container = this.coverContainerTarget
-    const imageUrl = container.dataset.coverUrl
+    const image = this.hiddenImageTarget
 
-    const img = new Image()
-    img.src = imageUrl
-    img.alt = "Cover Art"
-    img.className = "rounded-xl w-full h-auto object-cover"
-    img.onload = () => {
-      this.setGradient(img) // ✅ extract gradient before inserting
-      container.innerHTML = ""
-      container.appendChild(img)
+    if (image.complete) {
+      this.setGradient(image)
+    } else {
+      image.addEventListener("load", () => this.setGradient(image))
     }
   }
 
   setGradient(image) {
-    const colorThief = new ColorThief()
     try {
+      // ColorThief is expected to be loaded globally
+      const colorThief = new ColorThief()
       const baseColor = colorThief.getColor(image)
+
       const darker = rgbString(shadeRGBColor(baseColor, -0.3))
       const mid = rgbString(baseColor)
       const lighter = rgbString(shadeRGBColor(baseColor, 0.3))
 
       const gradient = `radial-gradient(circle, ${lighter} 0%, ${mid} 50%, ${darker} 100%)`
+
       this.circleTarget.style.backgroundImage = gradient
     } catch (e) {
       console.warn("Could not extract color:", e)

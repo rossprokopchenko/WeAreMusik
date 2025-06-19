@@ -6,6 +6,8 @@ class HomeController < ApplicationController
   before_action :load_data, only: [:index, :add_input_track, :clear_input_tracks]
 
   def index
+    @page_title = "Home - WeAreMusik"
+
     respond_to do |format|
       format.html
       format.turbo_stream

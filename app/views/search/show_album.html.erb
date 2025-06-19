@@ -8,11 +8,7 @@
 
 <div class="flex flex-col w-full">
 
-    <div class="text-2xl font-bold">
-        <%= @release.name %>
-    </div>
-
-    <div class="flex flex-col mt-4 rounded-l-xl dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+    <div class="flex flex-col mt-4 rounded-l-xl bg-gray-900 border border-gray-700">
         <div class="flex flex-row">
             <div class="cover-art-display">
                 <%# Use a turbo_frame_tag to allow dynamic updates of the image %>
@@ -24,7 +20,7 @@
             </div>
 
             <div class="flex flex-col items-center my-auto w-full">
-                <div class="text-xl text-center">
+                <div class="text-xl text-center font-semibold">
                     <%= @release.name %>
                 </div>
                 <div class="text-lg text-gray-400 text-center">
@@ -68,16 +64,26 @@
             </div>
         </div>
 
-        <div class="p-8">
-            <div class="text-lg">
-                Tracks
-            </div>
-
-            <% @release.tracks.each do |track| %>
-                <%= track.gid %>
+        <div class="p-8 mx-auto">
+            <%= turbo_frame_tag "save_button_#{@release.id}" do %>
+                <% unless current_user.releases.exists?(@release.id) %>
+                    <%= button_to "Save Album", save_release_path(@release), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" %>
+                <% else %>
+                    <span class="text-green-400">Already Saved</span>
+                <% end %>
             <% end %>
         </div>
+
     </div>
 
+    <div class="mt-8 p-8 max-h-96 columns-2 gap-0 overflow-y-auto max-w-4xl mx-auto bg-gray-900 border border-gray-700 rounded-xl">
+        <% @tracks.each do |track| %>
+            <a href="<%= search_track_path(track.gid) %>">
+                <div class="px-14 py-2 hover:bg-gray-800 rounded-sm">
+                    <%= track.position %>. <%= track.name %>
+                </div>
+            </a>
+        <% end %>
+    </div>
     
 </div>

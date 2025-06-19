@@ -8,8 +8,11 @@
                     <th scope="col" class="w-1/4 py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         Artist
                     </th>
+                    <th scope="col" class="w-1/3 py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        Name
+                    </th>
                     <th scope="col" class="w-full py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        Album Name
+                        Status
                     </th>
                     <th scope="col" class="relative py-3.5 px-4">
                         <span class="sr-only">Details</span>
@@ -29,8 +32,13 @@
                                 <div>
                                     <%= album.name %>
                                 </div>
+                            </td><td class="max-w-1/3 px-4 py-4 font-medium text-gray-200">
+                                <div>
+                                    <%= album.release_status&.name %>
+                                </div>
                             </td>
-                            <td class="px-8 py-4 font-medium whitespace-nowrap text-gray-200">
+                            
+                            <td class="px-8 py-4 font-medium whitespace-nowrap text-gray-200 text-right">
                                 <a href="<%= search_album_path(album.gid) %>" target="_blank">
                                     <button style="padding: 10px; width: 50px; height: 50px;"
                                         class="px-4 py-2 font-medium text-gray-600 sm:px-6 dark:text-gray-300"

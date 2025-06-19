@@ -28,7 +28,11 @@ Rails.application.routes.draw do
   get "/search", to: "search#index", as: :search
 
   get "/search/track/:gid", to: "search#show_track", as: :search_track
+  post "/search/track/:id/like", to: "search#like_track", as: :like_track
+
   get "/search/album/:gid", to: "search#show_album", as: :search_album
+  post "/search/album/:id/save", to: "search#save_release", as: :save_release
+
   get "/search/artist/:gid", to: "search#show_artist", as: :search_artist
 
   # get "/profile", to: "profile#index"

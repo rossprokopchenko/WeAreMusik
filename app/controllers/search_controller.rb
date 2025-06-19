@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  before_action :set_search_type
+  before_action :set_search_type, :set_page_title
 
   def index
     # Determine the model based on search_by parameter
@@ -26,13 +26,15 @@ class SearchController < ApplicationController
         hits_per_page: 50
       }
 
+      # Filter types based on the model being searched
       if model_to_search == Track
-        puts "Starting release pluck"
+        search_options[:filter] = 'is_canonical = true'
 
-        # valid_release_ids = ReleaseFirstReleaseDate.pluck(:release)
-        # search_options[:filter] = "release_id IN [#{valid_release_ids.join(',')}]"
+      elsif model_to_search == Release
+        
+      elsif model_to_search == Artist
 
-        puts "Finished release pluck"
+      elsif model_to_search == User
 
       end
       
@@ -114,6 +116,7 @@ class SearchController < ApplicationController
 
   def show_track
     @track = Track.find_by(gid: params[:gid])
+    @page_title = "#{@track&.name || 'Unknown Track'} - WeAreMusik"
 
     # Handle the case where the track is not found
     unless @track
@@ -137,6 +140,7 @@ class SearchController < ApplicationController
 
   def show_album
     @release = Release.find_by(gid: params[:gid])
+    @page_title = "#{@release&.name || 'Unknown Album'} - WeAreMusik"
 
     # Handle the case where the track is not found
     unless @release
@@ -153,7 +157,30 @@ class SearchController < ApplicationController
       Rails.logger.info "Enqueuing FetchCoverArtJob for Release MBID: #{@release.gid}"
       FetchCoverArtJob.perform_later(@release.id) # Enqueue the job with the release's ID
     end
+
+    @tracks = Track.includes(:recording, :artist_credit)
+      .joins(:medium)
+      .where('medium.release = ?', @release.id)
+      .order('medium.position ASC, track.position ASC')
+
   end
+
+  def save_release
+    release = Release.find(params[:id])
+
+    if current_user.releases.exists?(release.id)
+      flash.now[:notice] = "Already saved"
+    else
+      current_user.releases << release
+      flash.now[:notice] = "Added to saved albums!"
+    end
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to search_show_album_path(gid: release.gid), notice: "Added to saved" }
+    end
+  end
+
 
   def show_artist
     @artist = Artist.find_by(gid: params[:gid])
@@ -171,5 +198,9 @@ class SearchController < ApplicationController
     def set_search_type
       puts "Setting search_type mode from params: #{params[:search_type]}"
       @search_type = params[:search_type].presence || 'track' # Default to 'track' if not specified
+    end
+
+    def set_page_title
+      @page_title = "Search - WeAreMusik"
     end
 end
