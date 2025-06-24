@@ -29,7 +29,8 @@ class Area < ApplicationRecord
 
   # An area can have many release_countries
   has_many :release_countries, foreign_key: "country"
-
+  has_many :artists, foreign_key: "area"
+  
   # An Area can have one corresponding CountryArea entry if it is classified as a country.
   # The foreign_key is 'area' because the 'country_area' table's primary key is 'area'.
   has_one :country_area, foreign_key: :area

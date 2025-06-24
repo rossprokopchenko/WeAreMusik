@@ -3,6 +3,20 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = {
+    address:              "smtp.sendgrid.net",
+    port:                 587,
+    domain:               Rails.application.credentials.dig(:sendgrid, :domain),
+    user_name:            Rails.application.credentials.dig(:sendgrid, :username),
+    password:             Rails.application.credentials.dig(:sendgrid, :password),
+    authentication:       :plain,
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = { host: "wearemusik.com" }
+  
   # Code is not reloaded between requests.
   config.enable_reloading = false
 

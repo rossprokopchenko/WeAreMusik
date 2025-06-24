@@ -1,0 +1,12 @@
+
+<h1>Hello <%= @user.username %>,</h1>
+
+<p>Thanks for signing up on WeAreMusik! You may verify your account using the code or by clicking the link below:</p>
+
+<h2><%= @user.verification_code %></h2>
+
+<p>
+  <%= link_to "Verify my account", verify_url(email: @user.email_address, code: @user.verification_code) %>
+</p>
+
+<p>If you did not sign up, please ignore this message.</p>

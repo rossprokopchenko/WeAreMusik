@@ -1,16 +1,12 @@
 <% cache @user do %>
-  <div class="flex flex-row w-full py-6 overflow-y-auto">
-    
-    <!-- Left profile panel -->
-    <div class="flex flex-col h-full dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl">
+  <div class="flex flex-row w-full py-6">
+
+    <div class="sticky top-6 self-start h-[calc(100vh-12rem)] flex flex-col bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl">
       <%= render partial: "user/profile_card" %>
     </div>
 
-    <!-- Right content panel -->
-    <div class="flex flex-col border border-gray-200 dark:border-gray-700 min-w-[70%] max-w-full ml-16 rounded-2xl p-8">
-      
-      <!-- Favourite Section -->
-      <%= render partial: "user/favourite_section" %>
+    <div class="flex flex-col border border-gray-200 dark:border-gray-700 min-w-[70%] max-w-full ml-16 rounded-2xl p-8 bg-gray-900">
+      <%= render partial: "user/favorite_section" %>
     </div>
   </div>
 <% end %>

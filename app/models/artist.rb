@@ -24,7 +24,12 @@ class Artist < ApplicationRecord
   # ended            : boolean, default false, not null
   # extra_metric_1   : integer (nullable)
   # extra_metric_2   : integer (nullable)
+  
+  has_one_attached :image
 
+  belongs_to :artist_type, class_name: "ArtistType", foreign_key: "type", optional: true
+  belongs_to :area, class_name: "Area", foreign_key: "area", optional: true
+  
   # Associations
   has_many :artist_credit_names
   has_many :artist_credits, through: :artist_credit_names
@@ -47,6 +52,22 @@ class Artist < ApplicationRecord
     # Attributes to display in search results.
     displayed_attributes %i[id name]
   
+  end
+
+  def begin_date
+    return nil unless begin_date_year
+  
+    Date.new(begin_date_year, begin_date_month || 1, begin_date_day || 1).strftime("%B %-d, %Y")
+  rescue ArgumentError
+    nil
+  end
+  
+  def end_date
+    return nil unless end_date_year
+  
+    Date.new(end_date_year, end_date_month || 1, end_date_day || 1).strftime("%B %-d, %Y")
+  rescue ArgumentError
+    nil
   end
 
 end

@@ -1,0 +1,11 @@
+<% if artist.image.attached? %>
+  <%= image_tag url_for(artist.image),
+                alt: "#{artist.name} image, author: #{artist.image_author}",
+                title: "Image by #{artist.image_author}, CC BY-SA 4.0 via Wikimedia Commons",
+                id: "artist_image_#{artist.gid}",
+                class: "max-h-64 max-w-64 rounded-tl-xl bg-gray-50 border-r border-b border-gray-700 object-contain" %>
+<% else %>
+  <div class="min-h-64 min-w-64 max-h-64 max-w-64 bg-gray-50 rounded-tl-xl border-r border-b border-gray-700 flex items-center justify-center text-gray-400 text-5xl">
+    :(
+  </div>
+<% end %>

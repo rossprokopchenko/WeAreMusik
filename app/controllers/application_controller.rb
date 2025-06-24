@@ -5,10 +5,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   helper_method :current_user
   before_action :set_current_page, :set_default_title
-
-  # def new
-  #   FetchTracksJob.perform_later
-  # end
+  before_action :store_location, unless: -> { request.xhr? || request.format.json? }
 
   def set_current_page
     @current_page = controller_name
@@ -22,5 +19,19 @@ class ApplicationController < ActionController::Base
 
   def set_default_title
     @page_title = "WeAreMusik"
+  end
+
+  def store_location
+    return unless request.get? && !request.xhr?
+
+    disallowed_paths = [
+      login_path,
+      logout_path,
+      signup_path,
+    ].compact
+
+    unless disallowed_paths.include?(request.path)
+      session[:return_to_after_authenticating] = request.fullpath
+    end
   end
 end

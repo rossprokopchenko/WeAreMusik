@@ -10,4 +10,4 @@
   <%= render partial: "home/search_result_tracks", locals: { tracks: @search_result_tracks } %>
 <% end %>
 
-<%= turbo_stream.update "flash", partial: "home/flash" %>
+<%= turbo_stream.update "flash", partial: "layouts/flash" %>

@@ -12,10 +12,9 @@ class FetchCoverArtJob < ApplicationJob
         Rails.logger.info "FetchCoverArtJob: Successfully processed cover art for Release MBID: #{release.gid}."
 
         # Broadcast the updated turbo_frame for this release's cover art
-        # This will replace the content inside the turbo_frame_tag with ID "release_cover_art_#{release.id}"
         Turbo::StreamsChannel.broadcast_replace_to(
-          "release_#{release.gid}_cover_art", # The stream name to broadcast to
-          target: "release_cover_art_#{release.gid}", # The ID of the turbo_frame_tag to update
+          "release_#{release.gid}_cover_art",
+          target: "release_cover_art_#{release.gid}",
           partial: 'search/cover_art_frame',
           locals: { release: release }
         )

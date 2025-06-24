@@ -1,6 +1,112 @@
+<%= turbo_stream_from "artist_#{@artist.gid}_image" if @artist %>
+
 <div class="flex flex-col w-full">
 
-    <div class="text-2xl font-bold">
-        <%= @artist.name %>
+    <div class="flex flex-col mt-4 rounded-l-xl bg-gray-900 border border-gray-700">
+        <div class="flex flex-row">
+            <div class="w-1/3">
+                <div class="artist-image-display">
+                    <%= turbo_frame_tag "artist_image_#{@artist.gid}" do %>
+                        <%= render partial: 'search/artist_image_frame', locals: { artist: @artist } %>
+                    <% end %>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center my-auto w-full w-1/3">
+                <div class="text-xl text-center font-semibold">
+                    <%= @artist.name %>
+                </div>
+            </div>
+
+            <div class="flex flex-col ml-auto text-right p-4 w-1/3">
+                <div>
+                    <% if @artist.artist_type.present? %>
+                        <%= @artist.artist_type.name %>
+                    <% end %>
+                </div>
+                <div>
+                    <% if @artist.comment.present? %>
+                        <%= @artist.comment %>
+                    <% end %>
+                </div>
+
+                <div class="mt-auto">
+                    <div class="text-gray-400">
+                        <% if @artist.area.present? %>
+                            <div>
+                                <%= @artist.area&.name %>
+                            </div>
+                        <% end %>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <% if @artist.begin_date.present? || @artist.end_date.present? %>
+                            <div>
+                                Active: <%= @artist.begin_date %> - <%= @artist.end_date.presence || "present" %>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8 mx-auto flex flex-row gap-4">
+            <%= turbo_frame_tag "save_button_#{@artist.id}" do %>
+                <% unless current_user.artists.exists?(@artist.id) %>
+                    <%= button_to save_artist_path(@artist), method: :post, class: "bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded cursor-pointer gap-x-2 inline-flex items-center " do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill align-middle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                        </svg>
+
+                        <span class="text-white">Save Artist</span>
+                    <% end %>
+                <% else %>
+                    <span class="text-green-400">Already Saved</span>
+                <% end %>
+            <% end %>
+        </div>
     </div>
+
+    <div class="mt-8 max-h-96 overflow-y-auto min-w-4xl max-w-full mx-auto bg-gray-900 border border-gray-700 rounded-xl">
+        
+        <!-- Release Group Type Filter -->
+        <div class="flex gap-4 justify-center sticky top-0 bg-gray-900 z-50 border-b border-gray-700 py-4">
+            <% release_group_type_options.each_key do |type| %>
+                <% selected = params[:release_group_type].to_s == type || (params[:release_group_type].blank? && type == "Album") %>
+                <%= link_to type,
+                    search_artist_path(@artist.gid, release_status: params[:release_status], release_group_type: type),
+                    class: "px-4 py-2 rounded-lg text-sm font-medium transition-all #{selected ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}" %>
+            <% end %>
+        </div>
+
+
+        <!-- Release Status Filter -->
+        <div class="flex gap-4 justify-center sticky top-0 bg-gray-900 z-50 border-b border-gray-700 py-4">
+            <% release_status_options.each_key do |status| %>
+                <% selected = params[:release_status].to_s == status || (params[:release_status].blank? && status == "Official") %>
+                <%= link_to status,
+                    search_artist_path(@artist.gid, release_status: status, release_group_type: params[:release_group_type]),
+                    class: "px-4 py-2 rounded-lg text-sm font-medium transition-all #{selected ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}" %>
+            <% end %>
+        </div>
+
+
+        <div class="p-8">
+            <% if @releases.any? %>
+                <% @releases.each do |release| %>
+                    <div class="break-inside-avoid overflow-hidden">
+                        <a href="<%= search_album_path(release.gid) %>">
+                            <div class="px-4 py-2 hover:bg-gray-800 rounded-sm">
+                                <%= release.name %>
+                            </div>
+                        </a>
+                    </div>
+                <% end %>
+            <% else %>
+                <div class="text-gray-400 px-4 py-2">
+                    No releases found.
+                </div>
+            <% end %>
+        </div>
+    </div>
+
 </div>

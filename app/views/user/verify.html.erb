@@ -1,0 +1,31 @@
+
+<div class="w-full mx-auto mt-20 px-6">
+  <div class="bg-gray-800 border border-gray-700 p-10 rounded-xl shadow-md mx-auto max-w-xl">
+    <h1 class="text-3xl font-semibold text-gray-100 mb-6 text-center">Email Verification</h1>
+
+    <%= form_with url: verify_path, method: :post, class: "space-y-5" do |form| %>
+      <%= hidden_field_tag :email, @user.email_address %>
+
+      <div>
+        <%= label_tag :code, "Verification Code", class: "block text-sm font-medium text-gray-300" %>
+        <%= text_field_tag :code, @code, placeholder: "Enter verification code",
+              class: "w-full rounded-md border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 focus:outline-none px-4 py-2 text-sm" %>
+      </div>
+
+
+      <div class="flex flex-row w-full items-center">
+        <div class="flex flex-row w-1/3">
+          <%= link_to "Back to login", login_path,
+            class: "text-sm text-gray-400 hover:text-gray-200 underline underline-offset-2" %>
+        </div>
+
+        <div class="flex flex-col items-center w-1/3">
+          <%= form.submit "Verify Account", class: "rounded-md bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-medium text-white transition cursor-pointer" %>
+        </div>
+        
+        <div class="w-1/3">
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

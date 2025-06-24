@@ -9,8 +9,8 @@ class ArtistCreditName < ApplicationRecord
   # name          : string(1024), not null
   # join_phrase   : string(255), not null
 
-  belongs_to :artist_credit, foreign_key: "artist_credit"
   belongs_to :artist, foreign_key: "artist"
+  belongs_to :artist_credit, foreign_key: "artist_credit"
 
   validates :artist_credit, :position, :artist, :name, :join_phrase, presence: true
 end

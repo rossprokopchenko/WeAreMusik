@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "follow_button_#{@user.id}", partial: "user/follow_button", locals: { user: @user } %>
+
+<%= turbo_stream.replace "user_stats_#{@user.gid}", partial: "user/stats", locals: { user: @user } %>

@@ -17,5 +17,9 @@ class Recording < ApplicationRecord
   # Associations
   has_many :tracks
 
+  has_many :recording_url_links, foreign_key: :entity0
+  has_many :external_urls, through: :recording_url_links, source: :url
+
+
   # Validations, scopes, etc. can be added as needed
 end

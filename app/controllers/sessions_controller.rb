@@ -9,20 +9,26 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if user = User.authenticate_by(params.permit(:email_address, :password))
-      puts "User authenticated successfully: #{user.gid}"
-      cookies.signed[:user_gid] = { value: user.gid, expires: 2.weeks.from_now }
-      start_new_session_for user
-      redirect_to root_path, notice: "Welcome back, #{user.username}!"
+    if user = User.authenticate_by(username: params[:username], password: params[:password])
+
+      if user.verified?
+        start_new_session_for user
+        redirect_to after_authentication_url, notice: "Welcome, #{user.username}!"
+      else
+        redirect_to verify_path(email: @user.email_address), alert: "Please verify your account first."
+      end
     else
-      redirect_to new_session_path, alert: "Try another email address or password."
+      redirect_to login_path, alert: "Try another username or password."
     end
   end
+  
 
   def destroy
     terminate_session
-    redirect_to new_session_path
+    session[:return_to_after_authenticating] = request.referer if request.referer.present?
+    redirect_to login_path
   end
+  
 
   private
 

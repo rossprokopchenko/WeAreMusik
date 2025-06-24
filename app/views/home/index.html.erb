@@ -1,4 +1,4 @@
-<main class="flex h-full w-full overflow-x-hidden overflow-y-hidden justify-between">
+<div class="flex h-[calc(100vh-10rem)] w-full justify-between">
 
 	<!-- LEFT PANE -->
 	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto py-6">
@@ -15,7 +15,7 @@
 			<%# Flash message %>
 			<div id="flash" class="ml-auto">
 				<%= turbo_stream_from "flash" %>
-					<%= render "flash" %>
+					<%= render "layouts/flash" %>
 				<%= yield %>
 			</div>
 			
@@ -57,7 +57,7 @@
 	</div>
 
 	<!-- VERTICAL DIVIDER -->
-	<div class="w-[2] h-full rounded-xl dark:bg-slate-700"></div>
+	<div class="w-[2] h-full rounded-xl bg-slate-600"></div>
 
 	<!-- RIGHT PANE -->
 	<div class="flex flex-col w-[40%] min-w-[300px] max-w-[600px] h-full overflow-y-auto px-4 py-6">
@@ -65,7 +65,7 @@
 			<%= render partial: "home/recommended_tracks", locals: { tracks: @recommended_tracks } %>
 		<% end %>
 	</div>
-</main>
+</div>
 
 
 

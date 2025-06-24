@@ -20,47 +20,29 @@
   </div>
 </div>
 
-
-
 <!-- Profile info -->
 <div class="flex flex-col pt-18 px-6 w-full h-full">
     <div class="text-xl font-semibold text-white">
         <%= @user.username %>
     </div>
 
-    <div>
-        <div class="flex items-center space-x-2 mt-1">
-            <% @user.user_social_links.each do |link| %>
-            <a href="<%= link.url %>" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300">
-                <%= image_tag("icons/#{link.platform}.svg", class: "w-5 h-5") %>
-            </a>
-            <% end %>
-        </div>
+    <div class="flex items-center space-x-2 mt-1">
+        <% @user.user_social_links.each do |link| %>
+        <a href="<%= link.url %>" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300">
+            <%= image_tag("icons/#{link.platform}.svg", class: "w-5 h-5") %>
+        </a>
+        <% end %>
     </div>
 
-    <div>
-        <div class="flex items-center space-x-2 mt-2">
-            <span class="text-sm text-gray-400 dark:text-gray-300">
-                <%= @user.followers.count %> Followers
-            </span>
-            <span class="text-sm text-gray-400 dark:text-gray-300">
-                <%= @user.following.count %> Following
-            </span>
-        </div>
-    </div>
+    <%= render "user/stats", user: @user %>
 
     <div class="text-sm text-gray-300 dark:text-gray-300 mt-4">
         <%= @user.biography.body %>
     </div>
 
-    <div class="">
-        <button onclick="location.href=''" class="mt-9 flex items-center cursor-pointer w-full px-4 py-2 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-        </svg>
-        <span class="mx-auto">Follow</span>
-        </button>
-    </div>
+    <% if current_user != @user %>
+        <%= render partial: "user/follow_button", locals: { user: @user } %>
+    <% end %>
 
     <div class="flex justify-center items-center space-x-4 my-auto">
         <div class="flex flex-col items-center px-4 py-2 rounded-lg">
@@ -91,8 +73,10 @@
 </div>
 
 <!-- Edit profile link -->
-<div class="mt-auto mb-6 mx-auto">
-    <a href=<%= edit_user_path(@user) %> class="text-blue-400 underline hover:text-blue-300">
-        Edit profile
-    </a>
-</div>
+<% if current_user.gid == @user.gid %>
+    <div class="mt-auto mb-6 mx-auto">
+        <a href=<%= edit_user_path(@user) %> class="text-blue-400 underline hover:text-blue-300">
+            Edit profile
+        </a>
+    </div>
+<% end%>

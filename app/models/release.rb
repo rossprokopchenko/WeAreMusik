@@ -43,7 +43,7 @@ class Release < ApplicationRecord
     searchable_attributes %i[name artist_names]
 
     # Define attributes that can be used for filtering
-    filterable_attributes %i[ first_release_year ]
+    filterable_attributes %i[ first_release_year is_canonical ]
 
     # Define attributes that can be used for sorting.
     # Useful for sorting by relevance, name, length, etc.
@@ -58,6 +58,10 @@ class Release < ApplicationRecord
 
     add_attribute :first_release_year do
       first_release_date&.year
+    end
+
+    add_attribute :is_canonical do
+      is_canonical
     end
   end
 end

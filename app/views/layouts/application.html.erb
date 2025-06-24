@@ -19,16 +19,18 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gradient-to-b from-slate-800 to-slate-950 text-gray-100">
+  <body class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-gray-100">
     <%= render "navigation/navbar" %>
 
-    <main class="container max-w-screen-xl mx-auto py-8 flex overflow-y-hidden" style="height: calc(100vh - 80px);">
+    <main class="container max-w-screen-xl mx-auto py-8 flex" style="min-height: calc(100vh - 80px);">
       <%= yield %>
     </main>
 
+    <%= render "layouts/footer" %>
   </body>
 </html>

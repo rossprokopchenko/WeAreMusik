@@ -14,12 +14,12 @@
           Home
         </a>
       </li>
+      <li>
+        <a href="/search" class="h-full flex items-center px-3 rounded-sm <%= nav_link_class('search') %>">
+          Search
+        </a>
+      </li>
       <% if authenticated? %>
-        <li>
-          <a href="/search" class="h-full flex items-center px-3 rounded-sm <%= nav_link_class('search') %>">
-            Search
-          </a>
-        </li>
         <li>
           <a href="/user/<%= cookies.signed[:user_gid] %>" class="h-full flex items-center py-2 px-3 rounded-sm <%= nav_link_class('user') %>">
             Profile
@@ -30,11 +30,12 @@
 
     <!-- Right auth -->
     <div class="flex items-center space-x-4">
-      <% if !authenticated? %>
-        <%= link_to "Login", new_session_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 cursor-pointer" %>
-      <% else %>
-        <%= button_to "Log out", session_path, method: :delete, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 cursor-pointer" %>
+      <% if !authenticated? && !current_page?(login_path) %>
+        <%= link_to "Login", login_path, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 cursor-pointer" %>
+      <% elsif authenticated? %>
+        <%= button_to "Log out", logout_path, method: :delete, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 cursor-pointer" %>
       <% end %>
+
     </div>
 
   </div>

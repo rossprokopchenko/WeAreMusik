@@ -1,0 +1,72 @@
+
+<div class="w-full mt-20 px-6">
+  
+  <div class="max-w-xl bg-gray-800 border border-gray-700 p-16 rounded-xl shadow-md mx-auto">
+    <h1 class="text-3xl font-semibold text-gray-100 mb-6 text-center">Sign up</h1>
+
+    <%= form_with model: @user, url: signup_path, method: :post, data: { turbo: false }, class: "space-y-5" do |form| %>
+      <div>
+        <%= form.text_field :username,
+          placeholder: "Username",
+          class: "w-full rounded-md border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 focus:outline-none px-4 py-2 text-sm" %>
+      </div>
+
+      <div>
+        <%= form.email_field :email_address,
+            value: @user.email_address,
+            placeholder: "Email address",
+            class: "w-full rounded-md border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 focus:outline-none px-4 py-2 text-sm" %>
+      </div>
+
+      <div>
+        <%= form.password_field :password,
+          placeholder: "Password",
+          class: "w-full rounded-md border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 focus:outline-none px-4 py-2 text-sm" %>
+      </div>
+
+      <div>
+        <%= form.password_field :password_confirmation,
+          placeholder: "Confirm password",
+          class: "w-full rounded-md border border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 focus:outline-none px-4 py-2 text-sm" %>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
+
+        <div class="flex flex-row w-1/3">
+          <%= link_to "Back to login", login_path,
+            class: "text-sm text-gray-400 hover:text-gray-200 underline underline-offset-2" %>
+        </div>
+
+        <div class="flex flex-row w-1/3 items-center justify-center">
+          <%= form.submit "Create account", class: "rounded-md bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-medium text-white transition cursor-pointer" %>
+        </div>
+
+        <div class="w-1/3"></div>
+
+      </div>
+    <% end %>
+  </div>
+
+  <% if @user.errors.any? %>
+    <div class="mt-6 rounded-lg bg-red-500/10 text-red-400 text-sm border border-red-500/30 px-4 py-3 max-w-xl mx-auto">
+      <p class="font-medium mb-2"><%= pluralize(@user.errors.count, "error") %>:</p>
+      <ul class="list-disc list-inside">
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if alert = flash[:alert] %>
+    <p class="mt-6 rounded-lg bg-red-500/10 text-red-400 font-medium px-4 py-2 text-sm border border-red-500/30 max-w-xl mx-auto">
+      <%= alert %>
+    </p>
+  <% end %>
+
+  <% if notice = flash[:notice] %>
+    <p class="mt-6 rounded-lg bg-green-500/10 text-green-400 font-medium px-4 py-2 text-sm border border-green-500/30 max-w-xl mx-auto">
+      <%= notice %>
+    </p>
+  <% end %>
+</div>

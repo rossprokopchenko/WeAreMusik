@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_17_171852) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_191814) do
   create_schema "cover_art_archive"
   create_schema "dbmirror2"
   create_schema "documentation"
@@ -298,6 +298,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_171852) do
     t.boolean "ended", default: false, null: false
     t.integer "begin_area"
     t.integer "end_area"
+    t.string "image_author"
     t.index "lower(musicbrainz_unaccent((name)::text)), lower(musicbrainz_unaccent((comment)::text))", name: "artist_idx_lower_unaccent_name_comment"
     t.index "mb_simple_tsvector((name)::text)", name: "artist_idx_txt", using: :gin
     t.index "mb_simple_tsvector((sort_name)::text)", name: "artist_idx_txt_sort", using: :gin
@@ -3964,9 +3965,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_171852) do
     t.integer "edits_pending", default: 0, null: false
     t.integer "quality", limit: 2, default: -1, null: false
     t.timestamptz "last_updated", default: -> { "now()" }
+    t.boolean "is_canonical", default: false, null: false
     t.index "mb_simple_tsvector((name)::text)", name: "release_idx_txt", using: :gin
     t.index ["artist_credit"], name: "release_idx_artist_credit"
     t.index ["gid"], name: "release_idx_gid", unique: true
+    t.index ["is_canonical"], name: "index_release_on_is_canonical"
     t.index ["name"], name: "release_idx_musicbrainz_collate"
     t.index ["name"], name: "release_idx_name"
     t.index ["release_group"], name: "release_idx_release_group"
@@ -4574,6 +4577,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_171852) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.uuid "gid"
+    t.string "verification_code"
+    t.boolean "verified"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["gid"], name: "index_users_on_gid", unique: true
   end

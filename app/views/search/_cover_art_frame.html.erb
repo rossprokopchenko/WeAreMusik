@@ -1,6 +1,8 @@
 
 <% if release && release.cover_art.attached? %>
-    <%= image_tag url_for(release.cover_art), class: "min-h-64 min-w-64 max-h-64 max-w-64 flex-none rounded-tl-xl bg-gray-50 border-r border-b border-gray-700", alt: "Cover Art" %>
+    <%= image_tag url_for(release.cover_art), 
+    title: "Cover art from Cover Art Archive, used under fair use",
+    class: "min-h-64 min-w-64 max-h-64 max-w-64 flex-none rounded-tl-xl bg-gray-50 border-r border-b border-gray-700", alt: "Cover Art" %>
 <% else %>
     <div class="min-h-64 min-w-64 flex-none rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 text-5xl">:(</div>
 <% end %>

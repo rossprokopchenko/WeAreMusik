@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div class="p-8 mx-auto flex flex-row gap-4">
+        <div class="p-8 mx-auto flex flex-row gap-4 items-center justify-between">
             <%= turbo_frame_tag "save_button_#{@track.id}" do %>
                 <% unless current_user.tracks.exists?(@track.id) %>
                     <%= button_to like_track_path(@track), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 inline-flex items-center gap-x-2 rounded cursor-pointer" do %>
@@ -96,13 +96,55 @@
                 <span class="text-white">Go To Album</span>
             <% end %>
 
-            <%= link_to search_artist_path(@track.artist_credit&.gid), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+            <% artist_credit_names = @release.artist_credit&.artist_credit_names || [] %>
+
+            <% if artist_credit_names.size == 1 %>
+                <% artist = artist_credit_names.first.artist %>
+
+                <%= link_to search_artist_path(artist.gid), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                </svg>
+                    </svg>
+                    <span class="text-white">Go To Artist</span>
+                <% end %>
+
+                <% elsif artist_credit_names.size > 1 %>
                 
-                <span class="text-white">Go To Artist</span>
+                <div class="flex flex-col gap-2">
+                    <% artist_credit_names.each do |acn| %>
+                        <%= link_to search_artist_path(acn.artist.gid), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                            </svg>
+                            <span class="text-white"><%= acn.artist.name %></span>
+                        <% end %>
+                    <% end %>
+                </div>
             <% end %>
+
+            <% if @external_urls.any? %>
+                <div data-controller="show-track" class="relative inline-block">
+                    <button data-action="click->show-track#toggle"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-link-45deg" viewBox="0 0 16 16">
+                        <path d="M4.715 6.542a3 3 0 0 1 4.243 0l.708.707a1 1 0 0 0 1.414-1.414l-.707-.708a5 5 0 0 0-7.071 0l-1.414 1.415a5 5 0 0 0 0 7.07l.707.708a1 1 0 0 0 1.414-1.414l-.707-.707a3 3 0 0 1 0-4.243l1.413-1.414z"/>
+                        <path d="M6.542 4.715a3 3 0 0 1 4.243 0l1.414 1.414a3 3 0 0 1 0 4.243l-1.414 1.414a1 1 0 0 0 1.414 1.414l1.414-1.414a5 5 0 0 0 0-7.07L12.2 3.3a5 5 0 0 0-7.07 0 1 1 0 0 0 1.414 1.414l.707-.707z"/>
+                    </svg>
+                    <span>External Links</span>
+                    </button>
+
+                    <div data-show-track-target="externalLinks"
+                        class="hidden absolute mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-50">
+                    <% @external_urls.each do |url| %>
+                        <% domain = URI.parse(url.url).host.sub(/^www\./, '').split('.').first.capitalize %>
+                        <%= link_to domain, url.url, target: "_blank", rel: "noopener",
+                                    class: "block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" %>
+                    <% end %>
+                    </div>
+                </div>
+            <% end %>
+
 
         </div>
     </div>

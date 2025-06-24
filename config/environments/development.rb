@@ -3,6 +3,22 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.smtp_settings = {
+    address:              "smtp.sendgrid.net",
+    port:                 587,
+    domain:               Rails.application.credentials.dig(:sendgrid, :domain),
+    user_name:            Rails.application.credentials.dig(:sendgrid, :username),
+    password:             Rails.application.credentials.dig(:sendgrid, :key),
+    authentication:       :plain,
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
   config.active_job_queue_adapter = :async
   # config.solid_queue.connects_to = { database: { writing: :queue } }
 
