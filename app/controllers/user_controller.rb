@@ -1,5 +1,5 @@
 class UserController < ApplicationController
-  allow_unauthenticated_access only: [:new, :create, :verify, :confirm_verification]
+  allow_unauthenticated_access only: [:new, :create, :show, :verify, :confirm_verification]
   before_action :redirect_if_authenticated, only: [:new, :create, :verify, :confirm_verification]
 
   before_action :set_user, only: %i[ index show edit update follow unfollow destroy ]

@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   include ShowTrackHelper
   include ShowAlbumHelper
   include ShowArtistHelper
+  include Authentication
 
   allow_unauthenticated_access
 
