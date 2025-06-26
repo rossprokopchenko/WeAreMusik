@@ -35,3 +35,33 @@ production:
   <<: *default
   database: WeAreMusik_production
   schema_search_path: 'public,musicbrainz'
+  database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
+  username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
+  password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
+
+cable:
+  production:
+    <<: *default
+    database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
+    username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
+    password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
+    host: localhost
+    port: 5432
+
+cache:
+  production:
+    <<: *default
+    database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
+    username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
+    password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
+    host: localhost
+    port: 5432
+
+queue:
+  production:
+    <<: *default
+    database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
+    username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
+    password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
+    host: localhost
+    port: 5432
