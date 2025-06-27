@@ -1,5 +1,5 @@
 class ArtistCredit < ApplicationRecord
-  self.table_name = "artist_credit"
+  self.table_name = "musicbrainz.artist_credit"
 
   # Columns:
   # id            : integer, primary key

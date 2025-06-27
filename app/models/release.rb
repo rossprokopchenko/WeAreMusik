@@ -1,7 +1,7 @@
 class Release < ApplicationRecord
   include Meilisearch::Rails
 
-  self.table_name = "release"
+  self.table_name = "musicbrainz.release"
 
   # Columns:
   # id              : integer, primary key

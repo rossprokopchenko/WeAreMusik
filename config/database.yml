@@ -9,7 +9,7 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  schema_search_path: 'public,musicbrainz'
+  schema_search_path: 'musicbrainz,public'
 
 development:
   <<: *default
@@ -18,7 +18,7 @@ development:
   password: <%= Rails.application.credentials.dig(:pg_password) %>
   host: localhost
   port: 5432
-  schema_search_path: 'public,musicbrainz'
+  schema_search_path: 'musicbrainz,public'
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -26,7 +26,7 @@ development:
 test:
   <<: *default
   database: WeAreMusik_test
-  schema_search_path: 'public,musicbrainz'
+  schema_search_path: 'musicbrainz,public'
 
 
 # Store production database in the storage/ directory, which by default
@@ -34,7 +34,7 @@ test:
 production:
   <<: *default
   database: WeAreMusik_production
-  schema_search_path: 'public,musicbrainz'
+  schema_search_path: 'musicbrainz,public'
   database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
   username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
   password: <%= Rails.application.credentials.dig(:pg_password_prod) %>

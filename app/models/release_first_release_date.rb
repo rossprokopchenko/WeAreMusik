@@ -1,5 +1,5 @@
 class ReleaseFirstReleaseDate < ApplicationRecord
-  self.table_name = "release_first_release_date"
+  self.table_name = "musicbrainz.release_first_release_date"
 
   # Associations
   belongs_to :release, foreign_key: :release, optional: true

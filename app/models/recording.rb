@@ -1,5 +1,5 @@
 class Recording < ApplicationRecord
-  self.table_name = "recording"
+  self.table_name = "musicbrainz.recording"
 
   belongs_to :artist_credit
 

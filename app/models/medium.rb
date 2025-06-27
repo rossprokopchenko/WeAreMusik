@@ -1,5 +1,5 @@
 class Medium < ApplicationRecord
-  self.table_name = "medium"
+  self.table_name = "musicbrainz.medium"
 
   # Columns:
   # id            : integer, primary key

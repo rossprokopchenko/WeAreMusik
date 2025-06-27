@@ -1,6 +1,6 @@
 
 class Area < ApplicationRecord
-  self.table_name = "area"
+  self.table_name = "musicbrainz.area"
   self.primary_key = :id 
 
   # Disable Single Table Inheritance for the 'type' column,

@@ -1,6 +1,6 @@
 
 class CountryArea < ApplicationRecord
-  self.table_name = "country_area"
+  self.table_name = "musicbrainz.country_area"
 
   # Since the table only has one column 'area' and it's a foreign key
   # acting as the primary key, we explicitly set primary_key.

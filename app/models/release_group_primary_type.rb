@@ -1,5 +1,5 @@
 class ReleaseGroupPrimaryType < ApplicationRecord
-  self.table_name = "release_group_primary_type"
+  self.table_name = "musicbrainz.release_group_primary_type"
 
   # Columns:
   # id           : integer, primary key

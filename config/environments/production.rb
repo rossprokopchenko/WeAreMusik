@@ -10,7 +10,7 @@ Rails.application.configure do
     port:                 587,
     domain:               Rails.application.credentials.dig(:sendgrid, :domain),
     user_name:            Rails.application.credentials.dig(:sendgrid, :username),
-    password:             Rails.application.credentials.dig(:sendgrid, :password),
+    password:             Rails.application.credentials.dig(:sendgrid, :key),
     authentication:       :plain,
     enable_starttls_auto: true
   }

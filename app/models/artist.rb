@@ -1,7 +1,7 @@
 class Artist < ApplicationRecord
   include Meilisearch::Rails
 
-  self.table_name = "artist"
+  self.table_name = "musicbrainz.artist"
   self.inheritance_column = :_type_disabled
   
   # Columns:

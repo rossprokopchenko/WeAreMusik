@@ -1,5 +1,5 @@
 class ReleaseStatus < ApplicationRecord
-  self.table_name = "release_status"
+  self.table_name = "musicbrainz.release_status"
 
   # Columns:
   # id          : integer, primary key

@@ -1,5 +1,5 @@
 class Url < ApplicationRecord
-  self.table_name = "url"
+  self.table_name = "musicbrainz.url"
 
   self.inheritance_column = nil
 

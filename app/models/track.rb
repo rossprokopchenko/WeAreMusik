@@ -1,7 +1,7 @@
 class Track < ApplicationRecord
   include Meilisearch::Rails
 
-  self.table_name = "track"
+  self.table_name = "musicbrainz.track"
 
   # Columns:
   # id            : integer, primary key

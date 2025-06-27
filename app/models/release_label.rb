@@ -1,6 +1,6 @@
 
 class ReleaseLabel < ApplicationRecord
-  self.table_name = "release_label"
+  self.table_name = "musicbrainz.release_label"
 
   # Associations
   belongs_to :release, foreign_key: :release

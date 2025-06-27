@@ -1,6 +1,6 @@
 
 class ReleaseCountry < ApplicationRecord
-  self.table_name = "release_country"
+  self.table_name = "musicbrainz.release_country"
 
   # Indicate that this table does not have a primary key column named 'id'.
   self.primary_key = nil

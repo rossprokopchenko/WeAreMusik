@@ -1,5 +1,5 @@
 class ArtistCreditName < ApplicationRecord
-  self.table_name = "artist_credit_name"
+  self.table_name = "musicbrainz.artist_credit_name"
   self.primary_key = :artist_credit, :position # composite primary key
 
   # Columns:

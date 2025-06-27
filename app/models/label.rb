@@ -1,6 +1,6 @@
 # app/models/label.rb
 class Label < ApplicationRecord
-  self.table_name = "label"
+  self.table_name = "musicbrainz.label"
 
   # Disable Single Table Inheritance for the 'type' column,
   # as it's used as a foreign key and not for STI.
