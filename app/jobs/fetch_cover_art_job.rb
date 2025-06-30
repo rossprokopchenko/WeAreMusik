@@ -1,29 +1,44 @@
-
 class FetchCoverArtJob < ApplicationJob
+  queue_as :default
 
   def perform(release_id)
     release = Release.find_by(id: release_id)
-    return unless release
 
-    unless release.cover_art.attached?
-      fetched_attachment = MusicBrainzAPI::FetchCaa.fetch_or_cache_cover_art(release)
-
-      if fetched_attachment
-        Rails.logger.info "FetchCoverArtJob: Successfully processed cover art for Release MBID: #{release.gid}."
-
-        # Broadcast the updated turbo_frame for this release's cover art
-        Turbo::StreamsChannel.broadcast_replace_to(
-          "release_#{release.gid}_cover_art",
-          target: "release_cover_art_#{release.gid}",
-          partial: 'search/cover_art_frame',
-          locals: { release: release }
-        )
-      else
-        Rails.logger.warn "FetchCoverArtJob: Failed to fetch cover art for Release MBID: #{release.gid}."
-      end
+    unless release
+      Rails.logger.warn "FetchCoverArtJob: No Release found with ID #{release_id}."
+      return
     end
-  rescue StandardError => e
-    Rails.logger.error "FetchCoverArtJob: Error processing for Release ID #{release_id}: #{e.message}"
+
+    # Defensive: ensure the release has a valid, unique GID
+    unless release.gid.present?
+      Rails.logger.error "FetchCoverArtJob: Release ID #{release.id} has no GID — cannot proceed."
+      return
+    end
+
+    if release.cover_art.attached? && release.cover_art.persisted?
+      Rails.logger.info "FetchCoverArtJob: Cover art already attached for MBID: #{release.gid}."
+      return
+    end
+
+    # Attempt to fetch or cache cover art
+    fetched_attachment = MusicBrainzAPI::FetchCaa.fetch_or_cache_cover_art(release)
+
+    if fetched_attachment.present?
+      release.reload # Ensure attachment is persisted before broadcasting
+
+      Rails.logger.info "FetchCoverArtJob: Successfully processed cover art for Release MBID: #{release.gid}."
+
+      # Broadcast Turbo Stream update to the same stream name & target ID you use in your view
+      Turbo::StreamsChannel.broadcast_replace_to(
+        "release_#{release.gid}_cover_art",
+        target: "release_cover_art_#{release.gid}",
+        partial: 'search/cover_art_frame',
+        locals: { release: release }
+      )
+    else
+      Rails.logger.warn "FetchCoverArtJob: Failed to fetch cover art for MBID: #{release.gid}."
+    end
+  rescue => e
+    Rails.logger.error "FetchCoverArtJob: Error processing Release ID #{release_id} — #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
   end
-  
 end
