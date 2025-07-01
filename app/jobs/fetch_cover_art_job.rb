@@ -2,19 +2,19 @@ class FetchCoverArtJob < ApplicationJob
   queue_as :default
 
   def perform(release_id)
-    Rails.logger.info ">>> SCHEMA_SEARCH_PATH: #{ActiveRecord::Base.connection.schema_search_path}"
-    Rails.logger.info ">>> INDEXES FOR active_storage_attachments:"
-    Rails.logger.info ActiveRecord::Base.connection.indexes('active_storage_attachments').map(&:to_sql)
-
-
+    
     ActiveRecord::Base.connected_to(role: :writing) do
       ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
+      ActiveStorage::Attachment.table_name = 'public.active_storage_attachments'
+      ActiveStorage::Blob.table_name = 'public.active_storage_blobs'
 
-      
       Rails.logger.info ">>> SCHEMA_SEARCH_PATH: #{ActiveRecord::Base.connection.schema_search_path}"
       Rails.logger.info ">>> INDEXES FOR active_storage_attachments:"
-      Rails.logger.info ActiveRecord::Base.connection.indexes('active_storage_attachments').map(&:to_sql)
-
+      indexes = ActiveRecord::Base.connection.indexes('active_storage_attachments')
+      indexes.each do |idx|
+        Rails.logger.debug "Index: #{idx.name} | Unique: #{idx.unique} | Columns: #{idx.columns.inspect}"
+      end
+      
       release = Release.find_by(id: release_id)
 
       unless release
