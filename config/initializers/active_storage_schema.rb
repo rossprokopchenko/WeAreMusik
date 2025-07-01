@@ -1,2 +1,4 @@
-ActiveStorage::Attachment.table_name = 'public.active_storage_attachments'
-ActiveStorage::Blob.table_name = 'public.active_storage_blobs'
+Rails.application.config.after_initialize do
+  ActiveStorage::Attachment.table_name = 'public.active_storage_attachments'
+  ActiveStorage::Blob.table_name = 'public.active_storage_blobs'
+end
