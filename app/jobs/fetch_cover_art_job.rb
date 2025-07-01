@@ -2,34 +2,37 @@ class FetchCoverArtJob < ApplicationJob
   queue_as :default
 
   def perform(release_id)
-    release = Release.find_by(id: release_id)
+    ActiveRecord::Base.connected_to(role: :writing) do
+      ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
 
-    unless release
-      Rails.logger.warn "FetchCoverArtJob: No Release found with ID #{release_id}."
-      return
-    end
+      release = Release.find_by(id: release_id)
 
-    # Defensive: ensure the release has a valid, unique GID
-    unless release.gid.present?
-      Rails.logger.error "FetchCoverArtJob: Release ID #{release.id} has no GID — cannot proceed."
-      return
-    end
+      unless release
+        Rails.logger.warn "FetchCoverArtJob: No Release found with ID #{release_id}."
+        return
+      end
 
-    if release.cover_art.attached? && release.cover_art.persisted?
-      Rails.logger.info "FetchCoverArtJob: Cover art already attached for MBID: #{release.gid}."
-      return
-    end
+      # Defensive: ensure the release has a valid, unique GID
+      unless release.gid.present?
+        Rails.logger.error "FetchCoverArtJob: Release ID #{release.id} has no GID — cannot proceed."
+        return
+      end
 
-    # Attempt to fetch or cache cover art
-    fetched_attachment = MusicBrainzAPI::FetchCaa.fetch_or_cache_cover_art(release)
+      if release.cover_art.attached? && release.cover_art.persisted?
+        Rails.logger.info "FetchCoverArtJob: Cover art already attached for MBID: #{release.gid}."
+        return
+      end
 
-    if fetched_attachment.present?
-      release.reload # Ensure attachment is persisted before broadcasting
+      # Attempt to fetch or cache cover art
+      fetched_attachment = MusicBrainzAPI::FetchCaa.fetch_or_cache_cover_art(release)
 
-      Rails.logger.info "FetchCoverArtJob: Successfully processed cover art for Release MBID: #{release.gid}."
+      if fetched_attachment.present?
+        release.reload # Ensure attachment is persisted before broadcasting
 
-      ActiveRecord::Base.connected_to(role: :writing) do
-        ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
+        Rails.logger.info "FetchCoverArtJob: Successfully processed cover art for Release MBID: #{release.gid}."
+
+        Rails.logger.debug "SCHEMA SEARCH PATH: #{ActiveRecord::Base.connection.schema_search_path}"
+        Rails.logger.debug "VISIBLE INDEXES: #{ActiveRecord::Base.connection.indexes('active_storage_attachments').map(&:name)}"
 
         Turbo::StreamsChannel.broadcast_replace_to(
           "release_#{release.gid}_cover_art",
@@ -37,9 +40,10 @@ class FetchCoverArtJob < ApplicationJob
           partial: 'search/cover_art_frame',
           locals: { release: release }
         )
+      else
+        Rails.logger.warn "FetchCoverArtJob: Failed to fetch cover art for MBID: #{release.gid}."
       end
-    else
-      Rails.logger.warn "FetchCoverArtJob: Failed to fetch cover art for MBID: #{release.gid}."
+    
     end
   rescue => e
     Rails.logger.error "FetchCoverArtJob: Error processing Release ID #{release_id} — #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
