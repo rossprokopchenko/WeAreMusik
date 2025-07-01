@@ -2,6 +2,8 @@ class FetchCoverArtJob < ApplicationJob
   queue_as :default
 
   def perform(release_id)
+    ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
+
     release = Release.find_by(id: release_id)
 
     unless release

@@ -2,6 +2,8 @@ class FetchArtistImageJob < ApplicationJob
   queue_as :default
 
   def perform(artist_id)
+    ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
+
     artist = Artist.find_by(id: artist_id)
     return unless artist
   
