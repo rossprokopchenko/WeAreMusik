@@ -1,4 +1,4 @@
-class ReleaseStatus < ApplicationRecord
+class ReleaseStatus < MusicbrainzRecord
   self.table_name = "musicbrainz.release_status"
 
   # Columns:

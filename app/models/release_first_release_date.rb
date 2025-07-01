@@ -1,4 +1,4 @@
-class ReleaseFirstReleaseDate < ApplicationRecord
+class ReleaseFirstReleaseDate < MusicbrainzRecord
   self.table_name = "musicbrainz.release_first_release_date"
 
   # Associations

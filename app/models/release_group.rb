@@ -1,4 +1,4 @@
-class ReleaseGroup < ApplicationRecord
+class ReleaseGroup < MusicbrainzRecord
   self.table_name = "musicbrainz.release_group"
   
   self.inheritance_column = nil

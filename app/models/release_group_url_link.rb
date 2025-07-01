@@ -1,4 +1,4 @@
-class ReleaseGroupUrlLink < ApplicationRecord
+class ReleaseGroupUrlLink < MusicbrainzRecord
   self.table_name = 'musicbrainz.l_release_group_url'
 
   belongs_to :release_group, foreign_key: :entity0

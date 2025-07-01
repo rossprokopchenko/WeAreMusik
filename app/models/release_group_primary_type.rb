@@ -1,4 +1,4 @@
-class ReleaseGroupPrimaryType < ApplicationRecord
+class ReleaseGroupPrimaryType < MusicbrainzRecord
   self.table_name = "musicbrainz.release_group_primary_type"
 
   # Columns:

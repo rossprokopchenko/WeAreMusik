@@ -4,7 +4,7 @@ A web application developed in Ruby on Rails which uses the MusicBrainz music en
 
 ## How to start using WeAreMusik
 
-At the point of writing this, the application is not hosted and is not publicly available.
+Visit [WeAreMusik.com](https://wearemusik.com/)
 
 ## Development
 

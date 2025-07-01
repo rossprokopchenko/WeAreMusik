@@ -1,5 +1,5 @@
 
-class CountryArea < ApplicationRecord
+class CountryArea < MusicbrainzRecord
   self.table_name = "musicbrainz.country_area"
 
   # Since the table only has one column 'area' and it's a foreign key

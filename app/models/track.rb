@@ -1,4 +1,4 @@
-class Track < ApplicationRecord
+class Track < MusicbrainzRecord
   include Meilisearch::Rails
 
   self.table_name = "musicbrainz.track"

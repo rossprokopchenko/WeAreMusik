@@ -1,4 +1,4 @@
-class RecordingUrlLink < ApplicationRecord
+class RecordingUrlLink < MusicbrainzRecord
   self.table_name = "musicbrainz.l_recording_url"
 
   belongs_to :recording, foreign_key: :entity0

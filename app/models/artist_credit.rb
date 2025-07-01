@@ -1,4 +1,4 @@
-class ArtistCredit < ApplicationRecord
+class ArtistCredit < MusicbrainzRecord
   self.table_name = "musicbrainz.artist_credit"
 
   # Columns:

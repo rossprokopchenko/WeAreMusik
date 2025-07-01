@@ -1,5 +1,5 @@
 
-class ReleaseLabel < ApplicationRecord
+class ReleaseLabel < MusicbrainzRecord
   self.table_name = "musicbrainz.release_label"
 
   # Associations

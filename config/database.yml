@@ -1,62 +1,43 @@
-
 default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  schema_search_path: 'musicbrainz,public'
+  username: <%= Rails.application.credentials.dig(:wearemusik, :username) %>
+  password: <%= Rails.application.credentials.dig(:wearemusik, :password) %>
+
+primary_db: &primary_db
+  <<: *default
+  database: <%= Rails.application.credentials.dig(:wearemusik, :database_development) %>
+  host: <%= Rails.application.credentials.dig(:wearemusik, :host) %>
+  port: <%= Rails.application.credentials.dig(:wearemusik, :port) %>
+  schema_search_path: public
+
+musicbrainz_db: &musicbrainz_db
+  <<: *default
+  database: <%= Rails.application.credentials.dig(:musicbrainz, :database) %>
+  host: <%= Rails.application.credentials.dig(:musicbrainz, :host) %>
+  port: <%= Rails.application.credentials.dig(:musicbrainz, :port) %>
+  username: <%= Rails.application.credentials.dig(:musicbrainz, :username) %>
+  password: <%= Rails.application.credentials.dig(:musicbrainz, :password) %>
+  schema_search_path: musicbrainz,public
 
 development:
-  <<: *default
-  database: <%= Rails.application.credentials.dig(:pg_database) %>
-  username: <%= Rails.application.credentials.dig(:pg_user) %>
-  password: <%= Rails.application.credentials.dig(:pg_password) %>
-  host: localhost
-  port: 5432
-  schema_search_path: 'musicbrainz,public'
+  primary: *primary_db
+  musicbrainz: *musicbrainz_db
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: WeAreMusik_test
-  schema_search_path: 'musicbrainz,public'
-
-
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  <<: *default
-  database: WeAreMusik_production
-  schema_search_path: 'musicbrainz,public'
-  database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
-  username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
-  password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
+  primary: 
+    <<: *primary_db
+    database: <%= Rails.application.credentials.dig(:wearemusik, :database_production) %>
+
+  musicbrainz: *musicbrainz_db
 
 cable:
-  production:
-    <<: *default
-    database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
-    username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
-    password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
-    host: localhost
-    port: 5432
+  production: *primary_db
 
 cache:
-  production:
-    <<: *default
-    database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
-    username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
-    password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
-    host: localhost
-    port: 5432
+  production: *primary_db
 
 queue:
-  production:
-    <<: *default
-    database: <%= Rails.application.credentials.dig(:pg_database_prod) %>
-    username: <%= Rails.application.credentials.dig(:pg_user_prod) %>
-    password: <%= Rails.application.credentials.dig(:pg_password_prod) %>
-    host: localhost
-    port: 5432
+  production: *primary_db

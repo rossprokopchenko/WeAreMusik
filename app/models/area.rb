@@ -1,5 +1,5 @@
 
-class Area < ApplicationRecord
+class Area < MusicbrainzRecord
   self.table_name = "musicbrainz.area"
   self.primary_key = :id 
 

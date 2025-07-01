@@ -1,4 +1,4 @@
-class Medium < ApplicationRecord
+class Medium < MusicbrainzRecord
   self.table_name = "musicbrainz.medium"
 
   # Columns:

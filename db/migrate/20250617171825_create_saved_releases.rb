@@ -1,13 +1,14 @@
-
 class CreateSavedReleases < ActiveRecord::Migration[8.0]
   def change
-    create_table "public.saved_releases" do |t|
+    create_table :saved_releases do |t|
       t.references :user, null: false, foreign_key: true
-      t.references :release, null: false, foreign_key: { to_table: :release }
+      
+      # Store the release_id, but DO NOT add a foreign key constraint
+      t.bigint :release_id, null: false
 
       t.timestamps
     end
 
-    add_index "public.saved_releases", [:user_id, :release_id], unique: true
+    add_index :saved_releases, [:user_id, :release_id], unique: true
   end
 end
