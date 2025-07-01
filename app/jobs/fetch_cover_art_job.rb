@@ -2,8 +2,6 @@ class FetchCoverArtJob < ApplicationJob
   queue_as :default
 
   def perform(release_id)
-    ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
-
     release = Release.find_by(id: release_id)
 
     unless release
@@ -30,13 +28,16 @@ class FetchCoverArtJob < ApplicationJob
 
       Rails.logger.info "FetchCoverArtJob: Successfully processed cover art for Release MBID: #{release.gid}."
 
-      # Broadcast Turbo Stream update to the same stream name & target ID you use in your view
-      Turbo::StreamsChannel.broadcast_replace_to(
-        "release_#{release.gid}_cover_art",
-        target: "release_cover_art_#{release.gid}",
-        partial: 'search/cover_art_frame',
-        locals: { release: release }
-      )
+      ActiveRecord::Base.connected_to(role: :writing) do
+        ActiveRecord::Base.connection.schema_search_path = 'musicbrainz,public'
+
+        Turbo::StreamsChannel.broadcast_replace_to(
+          "release_#{release.gid}_cover_art",
+          target: "release_cover_art_#{release.gid}",
+          partial: 'search/cover_art_frame',
+          locals: { release: release }
+        )
+      end
     else
       Rails.logger.warn "FetchCoverArtJob: Failed to fetch cover art for MBID: #{release.gid}."
     end
