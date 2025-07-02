@@ -1,6 +1,6 @@
 # WeAreMusik introduction
 
-A web application developed in Ruby on Rails which uses the MusicBrainz music encyclopedia, machine learning and its users to recommend music. The project uses Python and machine learning to find correlations between track data and recommends users tracks.
+WeAreMusik is a web app built with Ruby on Rails that uses MusicBrainz, Python, and machine learning to recommend music. It aims to analyze ListenBrainz data to find connections between songs and deliver personalized recommendations — all without relying on commercial APIs.
 
 ## How to start using WeAreMusik
 
@@ -24,26 +24,31 @@ Visit [WeAreMusik.com](https://wearemusik.com/)
 
 https://github.com/metabrainz/musicbrainz-server
 
-- Load [canonical data](https://metabrainz.org/datasets/derived-dumps#canonical)
+- Initialize the musicbrainz-server with the latest [MusicBrainz fullexport](https://data.metabrainz.org/pub/musicbrainz/data/fullexport/)
 
-<code>
-    bin/rails tracks:mark_canonical_releases
-</code>
+- Download the [Canonical MetaBrainz data](https://data.metabrainz.org/pub/musicbrainz/canonical_data/)
 
-<code>
-    bin/rails releases:mark_canonical_releases
-</code>
+- Run the rake task:
 
-### Run ActiveRecods migrations
+```bash
+    bin/rake musicbrainz:initialize[CANONICAL_DATA_PATH]
+```
 
-<code>
-    bin/rails db:migrate
-</code>
+
+### Initialize the primary database
+
+```bash
+    bin/rake wearemusik:initialize
+```
 
 ### Meilisearch
 
 https://www.meilisearch.com/docs/learn/self_hosted/getting_started_with_self_hosted_meilisearch
 
-<code>
+- Run the non-commercial version of Meilisearch
+
+- Reindex Meilisearch with the project's models 
+
+```bash
     bin/rails meilisearch:reindex
-</code>
+```
