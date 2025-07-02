@@ -34,10 +34,13 @@ production:
   musicbrainz: *musicbrainz_db
 
 cable:
-  production: *primary_db
+    <<: *primary_db
+    database: <%= Rails.application.credentials.dig(:wearemusik, :database_production) %>
 
 cache:
-  production: *primary_db
+    <<: *primary_db
+    database: <%= Rails.application.credentials.dig(:wearemusik, :database_production) %>
 
 queue:
-  production: *primary_db
+    <<: *primary_db
+    database: <%= Rails.application.credentials.dig(:wearemusik, :database_production) %>
