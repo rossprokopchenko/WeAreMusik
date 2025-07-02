@@ -18,8 +18,6 @@ Visit [WeAreMusik.com](https://wearemusik.com/)
 
 * PostgreSQL 16
 
-* Docker (latest)
-
 ### MusicBrainz Server
 
 https://github.com/metabrainz/musicbrainz-server
