@@ -19,6 +19,9 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
+  config.action_cable.mount_path = '/cable'
+  config.turbo.signed_stream_verifier_key = Rails.application.credentials.dig(:secret_key_base)
+
   config.active_job_queue_adapter = :async
   # config.solid_queue.connects_to = { database: { writing: :queue } }
 

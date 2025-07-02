@@ -8,3 +8,4 @@ pin "trix"
 pin "@rails/actiontext", to: "actiontext.esm.js"
 pin "turbo_debug", to: "turbo_debug.js", preload: true
 pin "alpinejs" # @3.14.9
+pin "@hotwired/turbo-rails", to: "turbo.min.js"
