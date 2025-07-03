@@ -84,6 +84,11 @@ puts "InsertAll ancestors: #{ActiveRecord::InsertAll.ancestors.inspect}"
 puts "InsertAll methods: #{ActiveRecord::InsertAll.instance_methods.grep(/find_unique_index/).inspect}"
 puts
 
+puts
+puts "TurboStream model primary_key: #{TurboStream.primary_key.inspect}"
+puts "TurboStream connection primary_key: #{TurboStream.connection.primary_key('turbo_streams').inspect}"
+puts "TurboStream column names: #{TurboStream.column_names.inspect}"
+
 if sample
   puts "Simulating Turbo::StreamsChannel.broadcast_replace_to..."
   puts "  Current connection before broadcast:"
