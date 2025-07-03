@@ -4,14 +4,12 @@ puts
 puts "ActiveJob adapter: #{ActiveJob::Base.queue_adapter.class.name}"
 puts "ActiveJob queue_adapter inspect: #{ActiveJob::Base.queue_adapter.inspect}"
 
-# If you use multiple queues or have custom config, show that too:
 if ActiveJob::Base.queue_adapter.respond_to?(:queues)
   puts "ActiveJob queues: #{ActiveJob::Base.queue_adapter.queues.inspect}"
 end
 
 puts
 
-# Check current connection config for ActiveRecord
 puts "ApplicationRecord connection config:"
 puts "  DB Config: #{ApplicationRecord.connection_db_config.inspect}"
 puts "  Adapter: #{ApplicationRecord.connection_db_config.adapter}"
@@ -19,12 +17,10 @@ puts "  DB Name: #{ApplicationRecord.connection_db_config.name}"
 puts "  Schema Search Path: #{ApplicationRecord.connection.schema_search_path}"
 puts
 
-# Check what adapter class is actually used
 puts "ActiveRecord Adapter: #{ApplicationRecord.connection.adapter_name}"
 puts "Connection class: #{ApplicationRecord.connection.class.name}"
 puts
 
-# Show connection details if using Postgres
 if ApplicationRecord.connection.respond_to?(:raw_connection)
   raw_conn = ApplicationRecord.connection.raw_connection
   puts "Raw connection class: #{raw_conn.class.name}"
@@ -38,7 +34,6 @@ end
 
 puts
 
-# Check ActiveStorage tables and indexes
 %w[active_storage_blobs active_storage_attachments].each do |table|
   puts "Table: #{table}"
   indexes = ApplicationRecord.connection.indexes(table)
@@ -48,11 +43,9 @@ puts
   puts
 end
 
-# Show a sample Release record
 sample = Release.order("RANDOM()").limit(1).first
 puts "Sample Release: ID=#{sample.id}, GID=#{sample.gid}" if sample
 
-# Inspect the Turbo::StreamsChannel broadcast connection
 puts
 puts "=== TURBO BROADCAST TEST ==="
 puts
@@ -62,6 +55,26 @@ indexes = ApplicationRecord.connection.indexes("turbo_streams")
 indexes.each do |idx|
   puts "  Index: #{idx.name} | Unique: #{idx.unique} | Columns: #{idx.columns.inspect}"
 end
+puts
+
+# === Monkey patch for InsertAll debug ===
+module ActiveRecord
+  class InsertAll
+    alias_method :original_find_unique_index_for, :find_unique_index_for
+
+    def find_unique_index_for(conflict_target)
+      puts ">>> ActiveRecord::InsertAll#find_unique_index_for"
+      puts "    conflict_target: #{conflict_target.inspect}"
+      puts "    available unique indexes:"
+      unique_indexes.each do |idx|
+        puts "      #{idx.name} => columns: #{idx.columns.inspect}"
+      end
+      original_find_unique_index_for(conflict_target)
+    end
+  end
+end
+
+puts "Monkey patch for InsertAll applied."
 puts
 
 if sample
