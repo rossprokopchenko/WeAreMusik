@@ -1,3 +1,26 @@
+# === EARLY INSERT_ALL MONKEY PATCH ===
+puts "=== INSERT_ALL MONKEY PATCH ==="
+
+module ActiveRecord
+  class InsertAll
+    alias_method :original_find_unique_index_for, :find_unique_index_for
+
+    def find_unique_index_for(conflict_target)
+      puts ">>> ActiveRecord::InsertAll#find_unique_index_for"
+      puts "    conflict_target: #{conflict_target.inspect}"
+      puts "    available unique indexes:"
+      unique_indexes.each do |idx|
+        puts "      #{idx.name} => columns: #{idx.columns.inspect}"
+      end
+      original_find_unique_index_for(conflict_target)
+    end
+  end
+end
+
+puts "InsertAll monkey patch applied."
+puts
+
+# === DATABASE CONNECTION DEBUG ===
 puts "=== DATABASE CONNECTION DEBUG ==="
 puts
 
@@ -57,24 +80,8 @@ indexes.each do |idx|
 end
 puts
 
-# === Monkey patch for InsertAll debug ===
-module ActiveRecord
-  class InsertAll
-    alias_method :original_find_unique_index_for, :find_unique_index_for
-
-    def find_unique_index_for(conflict_target)
-      puts ">>> ActiveRecord::InsertAll#find_unique_index_for"
-      puts "    conflict_target: #{conflict_target.inspect}"
-      puts "    available unique indexes:"
-      unique_indexes.each do |idx|
-        puts "      #{idx.name} => columns: #{idx.columns.inspect}"
-      end
-      original_find_unique_index_for(conflict_target)
-    end
-  end
-end
-
-puts "Monkey patch for InsertAll applied."
+puts "InsertAll ancestors: #{ActiveRecord::InsertAll.ancestors.inspect}"
+puts "InsertAll methods: #{ActiveRecord::InsertAll.instance_methods.grep(/find_unique_index/).inspect}"
 puts
 
 if sample
