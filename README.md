@@ -4,7 +4,7 @@ WeAreMusik is a web app built with Ruby on Rails that uses MusicBrainz, Python, 
 
 ## How to start using WeAreMusik
 
-Visit [WeAreMusik.com](https://wearemusik.com/)
+As of today, there is no publicly hosted version of the website.
 
 ## Development
 
