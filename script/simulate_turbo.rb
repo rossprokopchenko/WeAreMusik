@@ -1,10 +1,41 @@
-
 puts "=== DATABASE CONNECTION DEBUG ==="
 puts
 
+puts "ActiveJob adapter: #{ActiveJob::Base.queue_adapter.class.name}"
+puts "ActiveJob queue_adapter inspect: #{ActiveJob::Base.queue_adapter.inspect}"
+
+# If you use multiple queues or have custom config, show that too:
+if ActiveJob::Base.queue_adapter.respond_to?(:queues)
+  puts "ActiveJob queues: #{ActiveJob::Base.queue_adapter.queues.inspect}"
+end
+
+puts
+
 # Check current connection config for ActiveRecord
-puts "ApplicationRecord connection: #{ApplicationRecord.connection_db_config.inspect}"
-puts "ApplicationRecord schema_search_path: #{ApplicationRecord.connection.schema_search_path}"
+puts "ApplicationRecord connection config:"
+puts "  DB Config: #{ApplicationRecord.connection_db_config.inspect}"
+puts "  Adapter: #{ApplicationRecord.connection_db_config.adapter}"
+puts "  DB Name: #{ApplicationRecord.connection_db_config.name}"
+puts "  Schema Search Path: #{ApplicationRecord.connection.schema_search_path}"
+puts
+
+# Check what adapter class is actually used
+puts "ActiveRecord Adapter: #{ApplicationRecord.connection.adapter_name}"
+puts "Connection class: #{ApplicationRecord.connection.class.name}"
+puts
+
+# Show connection details if using Postgres
+if ApplicationRecord.connection.respond_to?(:raw_connection)
+  raw_conn = ApplicationRecord.connection.raw_connection
+  puts "Raw connection class: #{raw_conn.class.name}"
+  if raw_conn.respond_to?(:host)
+    puts "  Host: #{raw_conn.host}"
+  end
+  if raw_conn.respond_to?(:port)
+    puts "  Port: #{raw_conn.port}"
+  end
+end
+
 puts
 
 # Check ActiveStorage tables and indexes
@@ -36,7 +67,9 @@ puts
 if sample
   puts "Simulating Turbo::StreamsChannel.broadcast_replace_to..."
   puts "  Current connection before broadcast:"
-  puts "    DB: #{ApplicationRecord.connection_db_config.name}"
+  puts "    DB Config Name: #{ApplicationRecord.connection_db_config.name}"
+  puts "    Adapter: #{ApplicationRecord.connection_db_config.adapter}"
+  puts "    Adapter Class: #{ApplicationRecord.connection.class.name}"
   puts "    schema_search_path: #{ApplicationRecord.connection.schema_search_path}"
 
   begin
