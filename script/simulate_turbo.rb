@@ -26,6 +26,13 @@ puts
 puts "=== TURBO BROADCAST TEST ==="
 puts
 
+puts "Table: turbo_streams"
+indexes = ApplicationRecord.connection.indexes("turbo_streams")
+indexes.each do |idx|
+  puts "  Index: #{idx.name} | Unique: #{idx.unique} | Columns: #{idx.columns.inspect}"
+end
+puts
+
 if sample
   puts "Simulating Turbo::StreamsChannel.broadcast_replace_to..."
   puts "  Current connection before broadcast:"
