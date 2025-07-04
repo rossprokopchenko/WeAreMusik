@@ -18,6 +18,8 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "wearemusik.com" }
   
   config.action_cable.mount_path = '/cable'
+  config.action_cable.adapter = :solid_cable
+  
   config.turbo.signed_stream_verifier_key = Rails.application.credentials.dig(:secret_key_base)
 
   # Code is not reloaded between requests.
