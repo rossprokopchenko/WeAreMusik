@@ -34,10 +34,10 @@ module ShowAlbumHelper
   def save_release
     release = Release.find(params[:gid])
 
-    if current_user.releases.exists?(release.id)
+    if current_user.saved_releases.exists?(release.id)
       flash.now[:notice] = "Already saved"
     else
-      current_user.releases << release
+      current_user.saved_releases.create!(release_id: release.id)
       flash.now[:notice] = "Added to saved albums!"
     end
 

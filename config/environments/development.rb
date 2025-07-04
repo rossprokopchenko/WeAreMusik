@@ -22,8 +22,8 @@ Rails.application.configure do
   config.action_cable.mount_path = '/cable'
   config.turbo.signed_stream_verifier_key = Rails.application.credentials.dig(:secret_key_base)
 
-  config.active_job_queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  config.active_job.queue_adapter = :async
+  # config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true

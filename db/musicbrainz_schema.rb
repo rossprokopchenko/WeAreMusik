@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_194716) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_04_133137) do
   create_schema "cover_art_archive"
   create_schema "dbmirror2"
   create_schema "documentation"
@@ -4506,6 +4506,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_194716) do
     t.text "body", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["id"], name: "index_turbo_streams_on_id", unique: true
     t.index ["record_type", "record_id"], name: "index_turbo_streams_on_record"
     t.index ["stream_name", "record_type", "record_id", "action"], name: "index_turbo_streams_uniqueness", unique: true
   end
