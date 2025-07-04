@@ -44,6 +44,8 @@ gem "htmlbeautifier"
 # Postgresql
 gem 'pg'
 
+gem 'redis'
+
 # PGSearch
 gem "pg_search"
 
