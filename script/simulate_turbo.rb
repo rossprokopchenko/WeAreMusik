@@ -26,11 +26,6 @@ puts
 
 puts "ActiveJob adapter: #{ActiveJob::Base.queue_adapter.class.name}"
 puts "ActiveJob queue_adapter inspect: #{ActiveJob::Base.queue_adapter.inspect}"
-
-if ActiveJob::Base.queue_adapter.respond_to?(:queues)
-  puts "ActiveJob queues: #{ActiveJob::Base.queue_adapter.queues.inspect}"
-end
-
 puts
 
 puts "ApplicationRecord connection config:"
@@ -84,19 +79,12 @@ puts "InsertAll ancestors: #{ActiveRecord::InsertAll.ancestors.inspect}"
 puts "InsertAll methods: #{ActiveRecord::InsertAll.instance_methods.grep(/find_unique_index/).inspect}"
 puts
 
-puts
 puts "TurboStream model primary_key: #{TurboStream.primary_key.inspect}"
 puts "TurboStream connection primary_key: #{TurboStream.connection.primary_key('turbo_streams').inspect}"
 puts "TurboStream column names: #{TurboStream.column_names.inspect}"
 
 if sample
   puts "Simulating Turbo::StreamsChannel.broadcast_replace_to..."
-  puts "  Current connection before broadcast:"
-  puts "    DB Config Name: #{ApplicationRecord.connection_db_config.name}"
-  puts "    Adapter: #{ApplicationRecord.connection_db_config.adapter}"
-  puts "    Adapter Class: #{ApplicationRecord.connection.class.name}"
-  puts "    schema_search_path: #{ApplicationRecord.connection.schema_search_path}"
-
   begin
     Turbo::StreamsChannel.broadcast_replace_to(
       "release_#{sample.gid}_cover_art",
@@ -104,9 +92,27 @@ if sample
       partial: "search/cover_art_frame",
       locals: { release: sample }
     )
-    puts "Turbo broadcast simulated successfully."
+    puts "✅ broadcast_replace_to: SUCCESS"
   rescue => e
-    puts "Turbo broadcast ERROR: #{e.class}: #{e.message}"
+    puts "❌ broadcast_replace_to ERROR: #{e.class}: #{e.message}"
+    puts e.backtrace.take(10).join("\n")
+  end
+
+  puts
+  puts "--- TRYING broadcast_action_to ---"
+  begin
+    Turbo::StreamsChannel.broadcast_action_to(
+      "release_#{sample.gid}_cover_art",
+      action: :replace,
+      target: "release_cover_art_#{sample.gid}",
+      content: ApplicationController.render(
+        partial: "search/cover_art_frame",
+        locals: { release: sample }
+      )
+    )
+    puts "✅ broadcast_action_to: SUCCESS"
+  rescue => e
+    puts "❌ broadcast_action_to ERROR: #{e.class}: #{e.message}"
     puts e.backtrace.take(10).join("\n")
   end
 else
