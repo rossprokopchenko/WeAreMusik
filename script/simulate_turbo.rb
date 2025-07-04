@@ -12,8 +12,12 @@ module ActiveRecord
       unique_indexes.each do |idx|
         puts "      #{idx.name} => columns: #{idx.columns.inspect}"
       end
+      puts "--- CALLER TRACE ---"
+      puts caller.take(20).join("\n")
+      puts "--- END TRACE ---"
       original_find_unique_index_for(conflict_target)
     end
+    
   end
 end
 
