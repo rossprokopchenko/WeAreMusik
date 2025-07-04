@@ -10,6 +10,8 @@ class SearchController < ApplicationController
   before_action :set_page_title
 
   def index
+    per_page = 50
+
     # Determine the model based on search_by parameter
     puts "Search type: #{@search_type}"
 
@@ -31,7 +33,7 @@ class SearchController < ApplicationController
 
       search_options = {
         page: meilisearch_query_page,
-        hits_per_page: 50
+        hits_per_page: per_page
       }
 
       # Filter types based on the model being searched
@@ -75,7 +77,7 @@ class SearchController < ApplicationController
                           .in_order_of(:id, ids_to_fetch)
       end
 
-      per_page     = meilisearch_results['hitsPerPage'].to_i
+      # per_page     = meilisearch_results['hitsPerPage'].to_i
       total_count  = meilisearch_results['totalHits'].to_i
       current_page = meilisearch_results['page'].to_i
 
@@ -92,7 +94,13 @@ class SearchController < ApplicationController
       )
 
     else
-      @paginated_results = Kaminari::PaginatableArray.new([], limit: 50, offset: 0, total_count: 0)
+      case @search_type
+        when 'users'
+          @paginated_results = User.page(params[:page]).per(per_page)
+
+        else
+          @paginated_results = Kaminari::PaginatableArray.new([], limit: 50, offset: 0, total_count: 0)
+      end
     end
 
     # puts "Rendering format: #{request.format}"

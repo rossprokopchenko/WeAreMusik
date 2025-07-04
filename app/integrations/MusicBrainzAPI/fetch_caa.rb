@@ -15,67 +15,59 @@ module MusicBrainzAPI
     # Returns:
     #   An ActiveStorage::Attached::One object (the image attachment) if successful, or nil.
     def self.fetch_or_cache_cover_art(release)
-      # Using puts for debugging as you had it, but Rails.logger.info is generally preferred
-      puts "Fetching cover art URLs for Release MBID: #{release.gid}"
-
-      # Basic validation: ensure we have a valid Release record with a MusicBrainz ID (gid)
+      Rails.logger.info "Fetching cover art URLs for Release MBID: #{release.gid}"
+    
       unless release.is_a?(Release) && release.gid.present?
         Rails.logger.warn "Invalid record provided to fetch_or_cache_cover_art. Expected Release with gid."
         return nil
       end
-
-      # 1. Check if the cover art is already attached and persisted in our storage
+    
+      # ✅ 1) Check if it's already attached
       if release.cover_art.attached? && release.cover_art.persisted?
         Rails.logger.info "Serving cached cover art for Release MBID: #{release.gid} from Active Storage."
-        return release.cover_art # Return the Active Storage attachment
+        return release.cover_art
       end
-
-      # 2. If not cached, fetch metadata from Cover Art Archive API
-      Rails.logger.info "Cover art for Release MBID: #{release.gid} not found in cache. Fetching from CAA API."
-      
-      # IMPORTANT: Apply follow_redirects to the initial metadata lookup URI as well
-      # This handles 307 (and other) redirects from coverartarchive.org itself
-      initial_metadata_uri = URI.parse("https://coverartarchive.org/release/#{release.gid}/")
-      final_metadata_uri = follow_redirects(initial_metadata_uri) || initial_metadata_uri
-      
-      # If follow_redirects returned nil due to an error, we can't proceed
-      return nil unless final_metadata_uri
-
-      cover_art_metadata = get_external_cover_art_urls(final_metadata_uri, release.gid) # Pass final_metadata_uri
-
-      if cover_art_metadata.nil? || cover_art_metadata.empty?
-        Rails.logger.info "No external cover art metadata found for Release MBID: #{release.gid} from CAA."
+    
+      # ✅ 2) Use the release_group MBID instead of the release MBID
+      release_group = release.release_group
+      unless release_group && release_group.gid.present?
+        Rails.logger.warn "No valid release_group with gid found for Release MBID: #{release.gid}."
         return nil
       end
-
-      # Try to find the front cover, otherwise take the first available image
-      front_cover_info = cover_art_metadata.find { |img| img[:front] } || cover_art_metadata.first
-      
-      # Ensure we have a large_thumbnail_url to use
-      unless front_cover_info && front_cover_info[:large_thumbnail_url].present?
-        Rails.logger.warn "No usable large_thumbnail_url found in CAA metadata for MBID: #{release.gid}. Falling back to full_size_url if available."
-        # Fallback to full_size_url if large_thumbnail_url is not present
-        image_url = front_cover_info[:full_size_url] if front_cover_info && front_cover_info[:full_size_url].present?
-        unless image_url.present?
-            Rails.logger.warn "No full_size_url available either for MBID: #{release.gid}."
-            return nil
-        end
-      else
-        image_url = front_cover_info[:large_thumbnail_url]
+    
+      Rails.logger.info "Cover art for Release MBID: #{release.gid} not cached; fetching from CAA for ReleaseGroup MBID: #{release_group.gid}"
+    
+      initial_metadata_uri = URI.parse("https://coverartarchive.org/release-group/#{release_group.gid}/")
+      final_metadata_uri = follow_redirects(initial_metadata_uri) || initial_metadata_uri
+    
+      return nil unless final_metadata_uri
+    
+      cover_art_metadata = get_external_cover_art_urls(final_metadata_uri, release_group.gid)
+    
+      if cover_art_metadata.nil? || cover_art_metadata.empty?
+        Rails.logger.info "No external cover art metadata found for ReleaseGroup MBID: #{release_group.gid}."
+        return nil
       end
-
-      # 3. Download the image data from the chosen URL and attach it
+    
+      front_cover_info = cover_art_metadata.find { |img| img[:front] } || cover_art_metadata.first
+    
+      image_url = if front_cover_info && front_cover_info[:large_thumbnail_url].present?
+        front_cover_info[:large_thumbnail_url]
+      elsif front_cover_info && front_cover_info[:full_size_url].present?
+        Rails.logger.warn "No large_thumbnail_url found; using full_size_url."
+        front_cover_info[:full_size_url]
+      else
+        Rails.logger.warn "No usable image URL found for ReleaseGroup MBID: #{release_group.gid}."
+        return nil
+      end
+    
       begin
         image_uri = URI.parse(image_url)
-        
-        # Follow redirects to ensure we get the final image location (archive.org might redirect)
         final_image_uri = follow_redirects(image_uri) || image_uri
-        
-        # If follow_redirects returned nil due to an error, we can't proceed with download
         return nil unless final_image_uri
-
+    
         response = Net::HTTP.get_response(final_image_uri)
-
+    
         if response.is_a?(Net::HTTPSuccess)
           temp_file = Tempfile.new(
             [File.basename(final_image_uri.path), File.extname(final_image_uri.path)],
@@ -84,18 +76,18 @@ module MusicBrainzAPI
           temp_file.binmode
           temp_file.write(response.body)
           temp_file.rewind
-
-          release.cover_art.attach( # Using 'cover_art' as per your model's attachment name
+    
+          release.cover_art.attach(
             io: temp_file,
             filename: File.basename(final_image_uri.path),
             content_type: response['Content-Type'] || 'application/octet-stream'
           )
-
+    
           if release.cover_art.attached? && release.cover_art.persisted?
-            Rails.logger.info "Successfully downloaded and cached cover art for Release MBID: #{release.gid}"
+            Rails.logger.info "Successfully downloaded and cached cover art for ReleaseGroup MBID: #{release_group.gid} onto Release MBID: #{release.gid}"
             return release.cover_art
           else
-            Rails.logger.error "Active Storage attachment failed for MBID #{release.gid} after download."
+            Rails.logger.error "Active Storage attachment failed for Release MBID #{release.gid}."
             return nil
           end
         else
@@ -103,13 +95,14 @@ module MusicBrainzAPI
           return nil
         end
       rescue StandardError => e
-        Rails.logger.error "An error occurred during image download/attachment for MBID #{release.gid}: #{e.message}"
+        Rails.logger.error "An error occurred during image download/attachment for Release MBID #{release.gid}: #{e.message}"
         return nil
       ensure
         temp_file.close if temp_file
         temp_file.unlink if temp_file
       end
     end
+    
 
     private
 

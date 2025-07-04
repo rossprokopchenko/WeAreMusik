@@ -46,8 +46,12 @@ class UserController < ApplicationController
     @user = User.find_by!(gid: params[:gid])
     @page_title = "#{@user.username}'s Profile - WeAreMusik"
 
-    @favorite_releases = @user.releases.includes(:artist_credit)
-    @favorite_artists = @user.artists
+
+    saved_release_ids = @user.saved_releases.pluck(:release_id)
+    saved_artist_ids = @user.saved_artists.pluck(:artist_id)
+
+    @favorite_releases = Release.where(id: saved_release_ids).includes(:artist_credit)
+    @favorite_artists = Artist.where(id: saved_artist_ids)
     
     @expanded = false
   end

@@ -77,10 +77,10 @@ module ShowArtistHelper
   def save_artist
     artist = Artist.find(params[:gid])
 
-    if current_user.artists.exists?(artist.id)
+    if current_user.saved_artists.exists?(artist.id)
       flash.now[:notice] = "Already saved"
     else
-      current_user.artists << artist
+      current_user.saved_artists.create!(artist_id: artist.id)
       flash.now[:notice] = "Added to saved artists!"
     end
 

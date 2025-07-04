@@ -35,10 +35,10 @@ class User < ApplicationRecord
   has_many :following, through: :followed_relationships, source: :followed
 
   has_many :saved_releases, dependent: :destroy
-  has_many :releases, through: :saved_releases, source: :release
+  # has_many :releases, through: :saved_releases, source: :release
 
   has_many :saved_artists, dependent: :destroy
-  has_many :artists, through: :saved_artists, source: :artist
+  # has_many :artists, through: :saved_artists, source: :artist
 
   has_many :liked_tracks, dependent: :destroy
   has_many :tracks, through: :liked_tracks
@@ -61,6 +61,14 @@ class User < ApplicationRecord
     # Attributes to display in search results.
     displayed_attributes %i[ id username ]
 
+  end
+
+  def saved_release_id?(release_id)
+    saved_releases.exists?(release_id: release_id)
+  end
+
+  def saved_artist_id?(artist_id)
+    saved_artists.exists?(artist_id: artist_id)
   end
 
   private
