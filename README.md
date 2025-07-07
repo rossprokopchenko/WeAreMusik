@@ -1,6 +1,6 @@
 # WeAreMusik introduction
 
-WeAreMusik is a web app built with Ruby on Rails that uses MusicBrainz, Python, and machine learning to recommend music. It aims to analyze ListenBrainz data to find connections between songs and deliver personalized recommendations — all without relying on commercial APIs.
+WeAreMusik is a web app built with Ruby on Rails that uses MusicBrainz, Python, and machine learning to recommend music. It aims to analyze ListenBrainz data to find connections between songs and deliver personalized recommendations.
 
 ## How to start using WeAreMusik
 
