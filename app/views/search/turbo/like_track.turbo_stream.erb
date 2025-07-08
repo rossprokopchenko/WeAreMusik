@@ -1,0 +1,4 @@
+
+<%= turbo_stream.replace "track_like_button_#{@track.id}" do %>
+    <%= render partial: "search/elements/track_like_button", locals: { track: @track } %>
+<% end %>

@@ -1,4 +1,6 @@
 class UserController < ApplicationController
+  include UserHelper
+
   allow_unauthenticated_access only: [:new, :create, :show, :verify, :confirm_verification]
   before_action :redirect_if_authenticated, only: [:new, :create, :verify, :confirm_verification]
 

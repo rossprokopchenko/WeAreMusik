@@ -112,7 +112,7 @@ class SearchController < ApplicationController
       end
       format.turbo_stream do
         puts "Rendering turbo stream for search results"
-        render turbo_stream: turbo_stream.update("search_result_table", partial: "search/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results })
+        render turbo_stream: turbo_stream.update("search_result_table", partial: "search/search_results/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results })
       end
     end
   end

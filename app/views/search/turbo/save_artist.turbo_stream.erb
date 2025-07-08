@@ -1,0 +1,4 @@
+
+<%= turbo_stream.update "artist_save_button_#{@artist.id}" do %>
+  <%= render partial: "search/elements/artist_save_button", locals: { artist: @artist } %>
+<% end %>

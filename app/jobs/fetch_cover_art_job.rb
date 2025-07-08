@@ -31,7 +31,7 @@ class FetchCoverArtJob < ApplicationJob
       Turbo::StreamsChannel.broadcast_replace_to(
         "release_#{release.gid}_cover_art",
         target: "release_cover_art_#{release.gid}",
-        partial: 'search/cover_art_frame',
+        partial: 'search/elements/cover_art_frame',
         locals: { release: release }
       )
     else

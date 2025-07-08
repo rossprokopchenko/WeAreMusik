@@ -4,21 +4,24 @@
     <div class="flex flex-row">
       <div class="text-xl text-white font-semibold">Favourite Albums</div>
 
-      <div class="ml-auto">
-        <button
-          type="button"
-          data-action="click->favorite-releases#toggle"
-          data-favorite-releases-target="seeAllButton"
-          class="underline text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer"
-        >
-          See all
-        </button>
-      </div>
+      <% if @favorite_releases.size > UserHelper::FAVOURITE_PER_ROW %>
+        <div class="ml-auto">
+          <button
+            type="button"
+            data-action="click->favorite-releases#toggle"
+            data-favorite-releases-target="seeAllButton"
+            class="underline text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer"
+          >
+            See all
+          </button>
+        </div>
+      <% end %>
+      
     </div>
 
     <div class="mt-2 py-4 overflow-y-auto max-w-5xl mx-auto space-y-4">
 
-      <% @favorite_releases.limit(5).each_slice(5) do |slice| %>
+      <% @favorite_releases.limit(UserHelper::FAVOURITE_PER_ROW).each_slice(UserHelper::FAVOURITE_PER_ROW) do |slice| %>
         <div class="flex w-full h-full space-x-4">
           <% slice.each do |release| %>
             <%= render partial: "release_card", locals: { release: release } %>
@@ -26,9 +29,9 @@
         </div>
       <% end %>
 
-      <% extra_releases = @favorite_releases.offset(5) %>
+      <% extra_releases = @favorite_releases.offset(UserHelper::FAVOURITE_PER_ROW) %>
 
-      <% extra_releases.each_slice(5) do |slice| %>
+      <% extra_releases.each_slice(UserHelper::FAVOURITE_PER_ROW) do |slice| %>
         <div
           class="flex w-full h-full space-x-4"
           data-favorite-releases-target="extraRelease"
@@ -57,21 +60,24 @@
     <div class="flex flex-row">
       <div class="text-xl text-white font-semibold">Favourite Artists</div>
 
-      <div class="ml-auto">
-        <button
-          type="button"
-          data-action="click->favorite-artists#toggle"
-          data-favorite-artists-target="seeAllButton"
-          class="underline text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer"
-        >
-          See all
-        </button>
-      </div>
+
+      <% if @favorite_artists.size > UserHelper::FAVOURITE_PER_ROW %>
+        <div class="ml-auto">
+          <button
+            type="button"
+            data-action="click->favorite-artists#toggle"
+            data-favorite-artists-target="seeAllButton"
+            class="underline text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer"
+          >
+            See all
+          </button>
+        </div>
+      <% end %>
     </div>
 
     <div class="mt-2 py-4 overflow-y-auto max-w-5xl mx-auto space-y-4">
 
-      <% @favorite_artists.limit(5).each_slice(5) do |slice| %>
+      <% @favorite_artists.limit(UserHelper::FAVOURITE_PER_ROW).each_slice(UserHelper::FAVOURITE_PER_ROW) do |slice| %>
         <div class="flex w-full h-full space-x-4">
           <% slice.each do |artist| %>
             <%= render partial: "artist_card", locals: { artist: artist } %>
@@ -79,9 +85,9 @@
         </div>
       <% end %>
 
-      <% extra_artists = @favorite_artists.offset(5) %>
+      <% extra_artists = @favorite_artists.offset(UserHelper::FAVOURITE_PER_ROW) %>
 
-      <% extra_artists.each_slice(5) do |slice| %>
+      <% extra_artists.each_slice(UserHelper::FAVOURITE_PER_ROW) do |slice| %>
         <div
           class="flex w-full h-full space-x-4"
           data-favorite-artists-target="extraArtist"

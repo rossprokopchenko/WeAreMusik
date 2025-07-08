@@ -23,11 +23,11 @@
 
     <div class="w-1/3 flex flex-row items-center justify-center gap-4">
       <div class="w-auto">
-        <%= render partial: "search/search_type_dropdown", locals: { current_search_by: @search_type } %>
+        <%= render partial: "search/elements/search_type_dropdown", locals: { current_search_by: @search_type } %>
       </div>
 
       <div class="w-auto">
-        <%= render partial: "search/filter_dropdown", locals: { current_search_by: @search_type } %>
+        <%= render partial: "search/elements/filter_dropdown", locals: { current_search_by: @search_type } %>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
   <%= turbo_frame_tag "search_result_table", class: "w-full flex flex-col gap-4 mt-4" do %>
     <div class="flex flex-col w-full">
       <div class="flex-grow overflow-y-auto">
-        <%= render partial: "search/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results } %>
+        <%= render partial: "search/search_results/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results } %>
       </div>
     </div>
   <% end %>

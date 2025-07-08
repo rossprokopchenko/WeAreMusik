@@ -16,7 +16,7 @@
                 <%# The ID should be unique, e.g., based on the release ID %>
                 <%= turbo_frame_tag "release_cover_art_#{@release.gid}" do %>
                     <%# Render the partial here, passing the @release object as 'release' local %>
-                    <%= render partial: 'search/cover_art_frame', locals: { release: @release } %>
+                    <%= render partial: 'search/elements/cover_art_frame', locals: { release: @release } %>
                 <% end %>
             </div>
 
@@ -74,23 +74,12 @@
         <div class="p-8 mx-auto flex flex-row gap-4 items-center justify-between">
             
             <% if authenticated? %>
-                <%= turbo_frame_tag "save_button_#{@track.id}" do %>
-                    <% unless current_user.tracks.exists?(@track.id) %>
-                        <%= button_to like_track_path(@track), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 inline-flex items-center gap-x-2 rounded cursor-pointer" do %>
-                            
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill align-middle" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                            </svg>
-
-                            <span class="text-white">Like Track</span>
-                        <% end %>
-                    <% else %>
-                        <span class="text-green-400">Already Liked</span>
-                    <% end %>
+                <%= turbo_frame_tag "track_like_button_#{@track.id}" do %>
+                    <%= render partial: "search/elements/track_like_button", locals: { track: @track } %>
                 <% end %>
             <% end %>
 
-            <%= link_to search_album_path(@track.release&.gid), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
+            <%= link_to search_album_path(@track.release&.gid), method: :post, class: "bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-album" viewBox="0 0 16 16">
                     <path d="M5.5 4a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5zm1 7a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>
                     <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
@@ -104,7 +93,7 @@
             <% if artist_credit_names.size == 1 %>
                 <% artist = artist_credit_names.first.artist %>
 
-                <%= link_to search_artist_path(artist.gid), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
+                <%= link_to search_artist_path(artist.gid), method: :post, class: "bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                     </svg>
@@ -115,7 +104,7 @@
                 
                 <div class="flex flex-col gap-2">
                     <% artist_credit_names.each do |acn| %>
-                        <%= link_to search_artist_path(acn.artist.gid), method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
+                        <%= link_to search_artist_path(acn.artist.gid), method: :post, class: "bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded inline-flex items-center gap-x-2" do %>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                             </svg>

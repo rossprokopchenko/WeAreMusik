@@ -75,18 +75,37 @@ module ShowArtistHelper
   end
 
   def save_artist
-    artist = Artist.find(params[:gid])
+    @artist = Artist.find_by(gid: params[:gid])
 
-    if current_user.saved_artists.exists?(artist.id)
+    if current_user.saved_artists.exists?(@artist.id)
       flash.now[:notice] = "Already saved"
     else
-      current_user.saved_artists.create!(artist_id: artist.id)
+      current_user.saved_artists.create!(artist_id: @artist.id)
       flash.now[:notice] = "Added to saved artists!"
     end
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to search_show_artist_path(gid: artist.gid), notice: "Added to saved" }
+      format.turbo_stream { render "search/turbo/save_artist" }
+      format.html { redirect_to search_show_artist_path(gid: @artist.gid), notice: "Added to saved artists!" }
     end
   end
+
+  def remove_artist
+    @artist = Artist.find_by(gid: params[:gid])
+  
+    saved_artist = current_user.saved_artists.find_by(artist_id: @artist.id)
+  
+    if saved_artist
+      saved_artist.destroy!
+      flash.now[:notice] = "Removed from saved artists."
+    else
+      flash.now[:notice] = "Artist not found in your saved artists."
+    end
+  
+    respond_to do |format|
+      format.turbo_stream { render "search/turbo/save_artist" }
+      format.html { redirect_to search_show_artist_path(gid: @artist.gid), notice: "Removed from saved artists." }
+    end
+  end
+  
 end

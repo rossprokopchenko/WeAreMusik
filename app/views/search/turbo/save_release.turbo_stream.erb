@@ -1,0 +1,4 @@
+
+<%= turbo_stream.update "release_save_button_#{@release.id}" do %>
+  <%= render partial: "search/elements/release_save_button", locals: { release: @release } %>
+<% end %>

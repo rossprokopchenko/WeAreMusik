@@ -29,12 +29,15 @@ Rails.application.routes.draw do
 
   get "/search/track/:gid", to: "search#show_track", as: :search_track
   post "/search/track/:gid/like", to: "search#like_track", as: :like_track
+  delete "/search/track/:gid/unlike", to: "search#unlike_track", as: :unlike_track
 
   get "/search/album/:gid", to: "search#show_album", as: :search_album
   post "/search/album/:gid/save", to: "search#save_release", as: :save_release
+  delete "/search/album/:gid/remove", to: "search#remove_release", as: :remove_release
 
   get "/search/artist/:gid", to: "search#show_artist", as: :search_artist
   post "/search/artist/:gid/save", to: "search#save_artist", as: :save_artist
+  delete "/search/artist/:gid/remove", to: "search#remove_artist", as: :remove_artist
 
   # get "/profile", to: "profile#index"
 

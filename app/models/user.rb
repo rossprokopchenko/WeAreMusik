@@ -41,7 +41,7 @@ class User < ApplicationRecord
   # has_many :artists, through: :saved_artists, source: :artist
 
   has_many :liked_tracks, dependent: :destroy
-  has_many :tracks, through: :liked_tracks
+  # has_many :tracks, through: :liked_tracks
 
   has_many :user_social_links, dependent: :destroy
   accepts_nested_attributes_for :user_social_links, allow_destroy: true
@@ -69,6 +69,10 @@ class User < ApplicationRecord
 
   def saved_artist_id?(artist_id)
     saved_artists.exists?(artist_id: artist_id)
+  end
+
+  def liked_track_id?(track_id)
+    liked_tracks.exists?(track_id: track_id)
   end
 
   private

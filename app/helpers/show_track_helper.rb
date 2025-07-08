@@ -29,18 +29,39 @@ module ShowTrackHelper
   end
 
   def like_track
-    track = Track.find(params[:gid])
-
-    if current_user.tracks.exists?(track.id)
-      flash.now[:notice] = "Already liked"
+    @track = Track.find_by!(gid: params[:gid])
+  
+    if current_user.liked_tracks.exists?(@track.id)
+      flash.now[:notice] = "Already saved"
     else
-      current_user.tracks << track
+      current_user.liked_tracks.create!(track_id: @track.id)
       flash.now[:notice] = "Added to liked tracks!"
     end
-
+  
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to search_show_track_path(gid: track.gid), notice: "Liked track" }
+      format.turbo_stream { render "search/turbo/like_track" }
+      format.html { redirect_to search_show_track_path(gid: @track.gid), notice: "Liked track" }
     end
   end
+  
+
+  def unlike_track
+    @track = Track.find_by(gid: params[:gid])
+  
+    liked_track = current_user.liked_tracks.find_by(track_id: @track.id)
+  
+    if liked_track
+      liked_track.destroy!
+      flash.now[:notice] = "Removed from liked tracks."
+    else
+      flash.now[:notice] = "Track not found in your liked tracks."
+    end
+  
+    respond_to do |format|
+      format.turbo_stream { render "search/turbo/like_track" }
+      format.html { redirect_to search_show_track_path(gid: @track.gid), notice: "Removed from liked tracks." }
+    end
+  end
+  
+  
 end

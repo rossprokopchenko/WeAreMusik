@@ -20,7 +20,7 @@ class FetchArtistImageJob < ApplicationJob
           Turbo::StreamsChannel.broadcast_replace_to(
             "artist_#{artist.gid}_image",
             target: "artist_image_#{artist.gid}",
-            partial: 'search/artist_image_frame',
+            partial: 'search/elements/artist_image_frame',
             locals: { artist: artist }
           )
         end
