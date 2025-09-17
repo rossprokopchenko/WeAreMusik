@@ -68,7 +68,18 @@
         <% end %>
     </div>
 
-    <div class="mt-8 max-h-96 overflow-y-auto min-w-4xl max-w-full mx-auto bg-gray-900 border border-gray-700 rounded-xl">
+    <div class="mt-4 flex flex-row bg-gray-900 border border-gray-700 rounded-xl p-4 space-x-4">
+        <% if @recommended_artists.present? %>
+            <% @recommended_artists.each do |artist| %>
+            <%= render partial: "common/artist_card", locals: { artist: artist } %>
+            <% end %>
+        <% else %>
+            <div class="text-gray-400">No recommendations available.</div>
+        <% end %>
+    </div>
+
+
+    <div class="mt-8 max-h-128 overflow-y-auto min-w-4xl max-w-full mx-auto bg-gray-900 border border-gray-700 rounded-xl">
         
         <!-- Release Group Type Filter -->
         <div class="flex gap-4 justify-center sticky top-0 bg-gray-900 z-50 border-b border-gray-700 py-4">

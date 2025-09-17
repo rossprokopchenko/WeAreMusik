@@ -42,7 +42,8 @@ backup*
 
 python/.idea
 python/__pycache__
-
+python/config.yaml
+python/venv
 python/datasets/*
 python/bin/*
 python/share/*

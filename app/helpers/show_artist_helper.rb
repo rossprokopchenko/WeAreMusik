@@ -41,6 +41,21 @@ module ShowArtistHelper
       FetchArtistImageJob.perform_later(@artist.id)
     end
 
+    # Fetch recommended artists synchronously
+    if @artist && @artist.gid.present?
+      Rails.logger.info "Fetching recommended artists for Artist MBID: #{@artist.gid}"
+      recommended_mbids = WeAreMusikAPI::FetchRecommendations.fetch_similar_artists(@artist.gid, limit: 10)
+
+      puts "Recommended MBIDs: #{recommended_mbids.inspect}"
+
+      @recommended_artists = Artist.where(gid: recommended_mbids["artist_mbids"])
+
+      puts "Recommended artists: #{@recommended_artists.inspect}"
+
+    else
+      @recommended_artists = []
+    end
+
     status_name = params[:release_status].presence || "Official"
     status_id = release_status_options[status_name] || release_status_options["Official"]
 

@@ -65,15 +65,15 @@ class SearchController < ApplicationController
           @results = Release.where(id: ids_to_fetch)
                           .includes(:artist_credit)
                           .in_order_of(:id, ids_to_fetch)
-        when 'artists'
-          @results = Artist.where(id: ids_to_fetch)
-                          .in_order_of(:id, ids_to_fetch)
         when 'users'
           @results = User.where(id: ids_to_fetch)
                         .in_order_of(:id, ids_to_fetch)
-        else # Default to track
+        when 'tracks'
           @results = Track.where(id: ids_to_fetch)
                           .includes(:recording, artist_credit: :artists)
+                          .in_order_of(:id, ids_to_fetch)
+        else # Default to artists
+          @results = Artist.where(id: ids_to_fetch)
                           .in_order_of(:id, ids_to_fetch)
       end
 
