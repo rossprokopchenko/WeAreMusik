@@ -80,7 +80,7 @@
       <% @favorite_artists.limit(UserHelper::FAVOURITE_PER_ROW).each_slice(UserHelper::FAVOURITE_PER_ROW) do |slice| %>
         <div class="flex w-full h-full space-x-4">
           <% slice.each do |artist| %>
-            <%= render partial: "artist_card", locals: { artist: artist } %>
+            <%= render partial: "common/artist_card", locals: { artist: artist } %>
           <% end %>
         </div>
       <% end %>
@@ -94,7 +94,7 @@
           style="display: none;"
         >
           <% slice.each do |artist| %>
-            <%= render partial: "artist_card", locals: { artist: artist } %>
+            <%= render partial: "common/artist_card", locals: { artist: artist } %>
           <% end %>
         </div>
       <% end %>

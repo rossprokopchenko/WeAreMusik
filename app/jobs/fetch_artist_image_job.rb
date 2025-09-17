@@ -7,7 +7,7 @@ class FetchArtistImageJob < ApplicationJob
     return unless artist
   
     unless artist.image.attached?
-      fetched_attachment = MusicBrainzAPI::FetchWikimedia.fetch_or_cache_artist_image(artist)
+      fetched_attachment = WikiMediaAPI::FetchWikimedia.fetch_or_cache_artist_image(artist)
   
       if fetched_attachment
         artist.reload  # Reload fresh attachment info

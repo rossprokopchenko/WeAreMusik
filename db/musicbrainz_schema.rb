@@ -919,7 +919,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_133137) do
     t.text "description"
     t.uuid "gid", null: false
     t.index ["gid"], name: "editor_collection_type_idx_gid", unique: true
-    t.check_constraint "entity_type::text = ANY (ARRAY['area'::character varying, 'artist'::character varying, 'event'::character varying, 'genre'::character varying, 'instrument'::character varying, 'label'::character varying, 'place'::character varying, 'recording'::character varying, 'release'::character varying, 'release_group'::character varying, 'series'::character varying, 'work'::character varying]::text[])", name: "allowed_collection_entity_type"
+    t.check_constraint "entity_type::text = ANY (ARRAY['area'::character varying::text, 'artist'::character varying::text, 'event'::character varying::text, 'genre'::character varying::text, 'instrument'::character varying::text, 'label'::character varying::text, 'place'::character varying::text, 'recording'::character varying::text, 'release'::character varying::text, 'release_group'::character varying::text, 'series'::character varying::text, 'work'::character varying::text])", name: "allowed_collection_entity_type"
   end
 
   create_table "editor_collection_work", primary_key: ["collection", "work"], force: :cascade do |t|
@@ -4428,7 +4428,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_133137) do
     t.text "description"
     t.uuid "gid", null: false
     t.index ["gid"], name: "series_type_idx_gid", unique: true
-    t.check_constraint "entity_type::text = ANY (ARRAY['artist'::character varying, 'event'::character varying, 'recording'::character varying, 'release'::character varying, 'release_group'::character varying, 'work'::character varying]::text[])", name: "allowed_series_entity_type"
+    t.check_constraint "entity_type::text = ANY (ARRAY['artist'::character varying::text, 'event'::character varying::text, 'recording'::character varying::text, 'release'::character varying::text, 'release_group'::character varying::text, 'work'::character varying::text])", name: "allowed_series_entity_type"
   end
 
   create_table "sessions", force: :cascade do |t|

@@ -41,6 +41,21 @@ module ShowArtistHelper
       FetchArtistImageJob.perform_later(@artist.id)
     end
 
+    # Fetch recommended artists synchronously
+    if @artist && @artist.gid.present?
+      Rails.logger.info "Fetching recommended artists for Artist MBID: #{@artist.gid}"
+      recommended_mbids = WeAreMusikAPI::FetchRecommendations.fetch_similar_artists(@artist.gid, limit: 10)
+
+      puts "Recommended MBIDs: #{recommended_mbids.inspect}"
+
+      @recommended_artists = Artist.where(gid: recommended_mbids["artist_mbids"])
+
+      puts "Recommended artists: #{@recommended_artists.inspect}"
+
+    else
+      @recommended_artists = []
+    end
+
     status_name = params[:release_status].presence || "Official"
     status_id = release_status_options[status_name] || release_status_options["Official"]
 
@@ -75,37 +90,18 @@ module ShowArtistHelper
   end
 
   def save_artist
-    @artist = Artist.find_by(gid: params[:gid])
+    artist = Artist.find(params[:gid])
 
-    if current_user.saved_artists.exists?(@artist.id)
+    if current_user.saved_artists.exists?(artist.id)
       flash.now[:notice] = "Already saved"
     else
-      current_user.saved_artists.create!(artist_id: @artist.id)
+      current_user.saved_artists.create!(artist_id: artist.id)
       flash.now[:notice] = "Added to saved artists!"
     end
 
     respond_to do |format|
-      format.turbo_stream { render "search/turbo/save_artist" }
-      format.html { redirect_to search_show_artist_path(gid: @artist.gid), notice: "Added to saved artists!" }
+      format.turbo_stream
+      format.html { redirect_to search_show_artist_path(gid: artist.gid), notice: "Added to saved" }
     end
   end
-
-  def remove_artist
-    @artist = Artist.find_by(gid: params[:gid])
-  
-    saved_artist = current_user.saved_artists.find_by(artist_id: @artist.id)
-  
-    if saved_artist
-      saved_artist.destroy!
-      flash.now[:notice] = "Removed from saved artists."
-    else
-      flash.now[:notice] = "Artist not found in your saved artists."
-    end
-  
-    respond_to do |format|
-      format.turbo_stream { render "search/turbo/save_artist" }
-      format.html { redirect_to search_show_artist_path(gid: @artist.gid), notice: "Removed from saved artists." }
-    end
-  end
-  
 end

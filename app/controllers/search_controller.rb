@@ -71,9 +71,12 @@ class SearchController < ApplicationController
         when 'users'
           @results = User.where(id: ids_to_fetch)
                         .in_order_of(:id, ids_to_fetch)
-        else # Default to track
+        when 'tracks'
           @results = Track.where(id: ids_to_fetch)
                           .includes(:recording, artist_credit: :artists)
+                          .in_order_of(:id, ids_to_fetch)
+        else # Default to artists
+          @results = Artist.where(id: ids_to_fetch)
                           .in_order_of(:id, ids_to_fetch)
       end
 
@@ -112,7 +115,7 @@ class SearchController < ApplicationController
       end
       format.turbo_stream do
         puts "Rendering turbo stream for search results"
-        render turbo_stream: turbo_stream.update("search_result_table", partial: "search/search_results/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results })
+        render turbo_stream: turbo_stream.update("search_result_table", partial: "search/search_result_#{@search_type.pluralize}", locals: { results: @paginated_results })
       end
     end
   end
